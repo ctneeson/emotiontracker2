@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emotion Tracker</title>
+    <!-- UIkit CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"
+    />
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Chart JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  </head>
+
+  <body>
+    <div class="uk-section">
+      <div class="uk-container">
+        <!-- prettier-ignore -->
+        <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar="" style="width: 100%">
+          <div class="uk-navbar-left">
+            <img src="/imgs/brain_icon.png" />
+
+            <ul class="uk-navbar-nav">
+              <% if (loggedin) { %>
+              <li class="uk-active"><a href="/">Snapshots</a></li>
+              <li class="uk-parent"><a href="/new">Add</a></li>
+              <% } %>
+            </ul>
+          </div>
+          <% if (!loggedin) { %>
+          <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+              <li class="uk-active"><a href="/login">Login</a></li>
+            </ul>
+          </div>
+          <% } else { %>
+          <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+              <li class="uk-active"><a href="/logout">Logout</a></li>
+            </ul>
+          </div>
+          <% } %>
+        </nav>
+      </div>
+    </div>
+
+    <div class="uk-section uk-background-muted">
+      <!-- prettier-ignore -->
+      <div class="uk-container">
+        <% if (loggedin) { %>
+        <h2 class="uk-heading-small uk-heading-line uk-text-center">
+          <span> <%= `Emotion Snapshots for: ${user.name}`%> </span>
+        </h2>
+        <% } else { %>
+        <h2 class="uk-heading-small uk-heading-line uk-text-center">
+          <span>My Emotion Tracker</span>
+        </h2>
+        <% } %>
+        <% if (loggedin) { %>
+        <div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
+          <% const dateformat = { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'numeric', minute:'numeric', second:'numeric', hour12: false }; %>
+          <% snapshot.forEach((row) => { %>
+            <% var snapshotid = row.id; %>
+          <div>
+            <a href="/edit/<%= snapshotid %>" class="uk-display-block uk-card uk-card-body uk-card-default uk-link-toggle">
+              <% var rawdate = new Date(row.UPDATE_DATE); %>
+              <% var itemdate = new Intl.DateTimeFormat('en-GB', dateformat).format(rawdate); %>
+              <h3 class="uk-card-title">
+                <span class="uk-link-heading"><%= snapshotid + ': ' + itemdate %></span>
+              </h3>
+              <canvas id="chartId-<%= snapshotid %>" aria-label="chart" height="90" width="150"></canvas>
+              <%= row.items %>
+            </a>
+          </div>
+          <% }); %>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <script>
+      <% snapshot.forEach((row) => { %>
+        var chrt_<%= row.id %> = document.getElementById("chartId-<%= row.id %>").getContext("2d");
+
+        var initialData_<%= row.id %> = [
+          <%= row.level_anger %>,
+          <%= row.level_contempt %>,
+          <%= row.level_disgust %>,
+          <%= row.level_enjoyment %>,
+          <%= row.level_fear %>,
+          <%= row.level_sadness %>,
+          <%= row.level_surprise %>,
+        ];
+
+        var chartId_<%= row.id %> = new Chart(chrt_<%= row.id %>, {
+          type: "radar",
+          data: {
+            labels: [
+              "Anger",
+              "Contempt",
+              "Disgust",
+              "Enjoyment",
+              "Fear",
+              "Sadness",
+              "Surprise",
+            ],
+            datasets: [
+              {
+                data: initialData_<%= row.id %>,
+                backgroundColor: ["#FFF17625"],
+                pointBackgroundColor: [
+                  "yellow",
+                  "aqua",
+                  "pink",
+                  "lightgreen",
+                  "lightblue",
+                  "gold",
+                  "purple",
+                ],
+                borderColor: ["black"],
+                borderWidth: 1,
+                pointRadius: 6,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+            legend: {
+                display: false,
+              },
+            },
+            scale: {
+              ticks: {
+                beginAtZero: true,
+              },
+              min: 0,
+              max: 10,
+            },
+            elements: {
+              line: {
+                borderWidth: 3,
+              },
+            },
+          },
+        });
+      <% }); %>
+    </script>
+  </body>
+</html>

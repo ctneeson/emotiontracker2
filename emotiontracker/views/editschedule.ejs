@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Express Runclub</title>
+    <!-- UIkit CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"
+    />
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+  </head>
+
+  <body>
+    <div class="uk-section">
+      <div class="uk-container">
+        <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
+          <div class="uk-navbar-left">
+            <img src="/imgs/brain_icon.png" />
+
+            <ul class="uk-navbar-nav">
+              <li class="uk-active"><a href="/">Schedule</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <% for (let row of details) { %> <% var runid = row.id; %> <% var runinfo =
+    row.items; %> <% var rundate = row.mydate; %> <% var inputdate = new
+    Date(rundate); %> <% const year = inputdate.getFullYear(); %> <% const month
+    = (inputdate.getMonth() + 1).toString().padStart(2, "0"); %> <% const day =
+    inputdate.getDate().toString().padStart(2, "0"); %> <% var formattedDate =
+    `${year}-${month}-${day}`; %> <% } %>
+    <div class="uk-section uk-background-muted">
+      <div class="uk-container">
+        <form
+          method="post"
+          action="/edit/<%= runid %>"
+          class="uk-grid-small"
+          uk-grid
+        >
+          <div class="uk-width-3-4@s">
+            <input
+              class="uk-input"
+              name="run_details"
+              type="text"
+              value="<%= runinfo %>"
+              required
+            />
+          </div>
+
+          <div class="uk-width-1-4@s">
+            <input
+              class="uk-input"
+              name="run_date"
+              type="date"
+              value="<%= formattedDate %>"
+              required
+            />
+          </div>
+
+          <div class="uk-width-auto">
+            <div uk-form-custom>
+              <button class="uk-button uk-button-secondary uk-button-large">
+                Update
+              </button>
+            </div>
+            <% if (role == 'administrator') { %>
+            <div uk-form-custom>
+              <button
+                class="uk-button uk-button-danger uk-button-large"
+                formaction="/del/<%= runid %>"
+              >
+                Delete
+              </button>
+            </div>
+            <% } %>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

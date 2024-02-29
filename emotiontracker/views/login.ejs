@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emotion Tracker</title>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+  </head>
+  <body>
+    <div class="uk-section">
+      <div class="uk-container">
+        <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
+          <div class="uk-navbar-left">
+            <img src="/imgs/brain_icon.png" />
+            <ul class="uk-navbar-nav">
+              <li class="uk-active"><a href="/">Snapshots</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="uk-section uk-background-muted">
+      <div class="uk-container">
+        <% if (loginsuccess.status == 'failure') { %>
+        <div class="uk-alert-danger" uk-alert>
+          <a href class="uk-alert-close" uk-close></a>
+          <p><%= `${loginsuccess.message}, please try again.` %></p>
+        </div>
+        <% } %>
+        <form method="post" action="/login" class="uk-grid-small" uk-grid>
+          <div class="uk-width-1-2@s">
+            <input class="uk-input" name="username" type="text" placeholder="Username" required/>
+          </div>
+          <div class="uk-width-1-2@s">
+            <input class="uk-input" name="userpass" type="password" placeholder="Password" required/>
+          </div>
+          <div class="uk-width-1-4@s">
+            <div uk-form-custom>
+              <button class="uk-button uk-button-default uk-button- large">
+                Login
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
