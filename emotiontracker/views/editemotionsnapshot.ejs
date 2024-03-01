@@ -234,6 +234,7 @@
       </div>
     </div>
 
+    
     <script>
       // SLIDER
       function increaseValue(emotion) {
@@ -435,9 +436,10 @@
           inp_surprise: surprise,
           inp_notes: snapshotNotes,
           inp_triggerlist: triggerDetails,
-          inp_snapshotDate: snapshotDate,
+          inp_snapshotdate: snapshotDate,
           inp_user: snapshotuser,
         };
+        console.log("postData:",postData);
     
         $.post('/edit/' + snapshotid, postData, function (data) {
           console.log(data);

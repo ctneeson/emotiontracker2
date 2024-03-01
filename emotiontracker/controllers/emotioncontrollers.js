@@ -122,14 +122,30 @@ exports.updateEmotionHistByID = async (req, res) => {
   if (isloggedin) {
     const snapshot_id = req.params.id;
     console.log("snapshot_id:", snapshot_id);
-    const vals = ({ snapshot_details, snapshot_date } = req.body);
-    console.log("vals:", vals);
+    const snapshot_details = {
+      snapshot_details: {
+        inp_ehid: parseInt(req.body.inp_ehid),
+        inp_anger: parseInt(req.body.inp_anger),
+        inp_contempt: parseInt(req.body.inp_contempt),
+        inp_disgust: parseInt(req.body.inp_disgust),
+        inp_enjoyment: parseInt(req.body.inp_enjoyment),
+        inp_fear: parseInt(req.body.inp_fear),
+        inp_sadness: parseInt(req.body.inp_sadness),
+        inp_surprise: parseInt(req.body.inp_surprise),
+        inp_notes: req.body.inp_notes,
+        inp_triggerlist: req.body.inp_triggerlist,
+        inp_snapshotdate: req.body.inp_snapshotdate,
+        inp_user: req.body.inp_user,
+      },
+    };
+    console.log("req.body:", req.body);
+    console.log("snapshot_details:", snapshot_details);
     const endpoint = `http://localhost:3002/emotionhistory/${snapshot_id}`;
     console.log(
       `Logged in. Method: updateEmotionHistByID | Calling endpoint: ${endpoint}`
     );
     await axios
-      .put(endpoint, vals)
+      .put(endpoint, snapshot_details)
       .then((response) => {
         console.log(response.data);
         res.redirect("/");
