@@ -396,7 +396,7 @@
         var snapshotDate = document.getElementsByName('snapshot_date')[0].value;
         var snapshotNotes = document.getElementsByName('snapshot_notes')[0].value;
 
-        var putData = {
+        var postData = {
           inp_anger: anger,
           inp_contempt: contempt,
           inp_disgust: disgust,
@@ -409,9 +409,9 @@
           inp_snapshotdate: snapshotDate,
           inp_user: snapshotuser,
         };
-        console.log("putData:", putData);
+        console.log("postData:", postData);
 
-        $.put('/new', putData, function (data) {
+        $.post('/new', postData, function (data) {
           console.log(data);
         });
       }

@@ -93,16 +93,31 @@ exports.postNewEmotionHist = async (req, res) => {
   console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
 
   if (isloggedin) {
-    const vals = ({ new_details, new_date } = req.body);
+    const snapshot_details = {
+      snapshot_details: {
+        inp_anger: parseInt(req.body.inp_anger),
+        inp_contempt: parseInt(req.body.inp_contempt),
+        inp_disgust: parseInt(req.body.inp_disgust),
+        inp_enjoyment: parseInt(req.body.inp_enjoyment),
+        inp_fear: parseInt(req.body.inp_fear),
+        inp_sadness: parseInt(req.body.inp_sadness),
+        inp_surprise: parseInt(req.body.inp_surprise),
+        inp_notes: req.body.inp_notes.trim(),
+        inp_triggerlist: req.body.inp_triggerlist.trim(),
+        inp_snapshotdate: req.body.inp_snapshotdate,
+        inp_user: req.body.inp_user.trim(),
+      },
+    };
+    console.log("req.body:", req.body);
+    console.log("snapshot_details:", snapshot_details);
     const endpoint = `http://localhost:3002/emotionhistory/new`;
     console.log(
       `Logged in. Method: postNewEmotionHist | Calling endpoint: ${endpoint}`
     );
     await axios
-      .post(endpoint, vals)
+      .post(endpoint, snapshot_details)
       .then((response) => {
-        const data = response.data;
-        console.log(data);
+        console.log(response.data);
         res.redirect("/");
       })
       .catch((error) => {
@@ -132,10 +147,10 @@ exports.updateEmotionHistByID = async (req, res) => {
         inp_fear: parseInt(req.body.inp_fear),
         inp_sadness: parseInt(req.body.inp_sadness),
         inp_surprise: parseInt(req.body.inp_surprise),
-        inp_notes: req.body.inp_notes,
-        inp_triggerlist: req.body.inp_triggerlist,
+        inp_notes: req.body.inp_notes.trim(),
+        inp_triggerlist: req.body.inp_triggerlist.trim(),
         inp_snapshotdate: req.body.inp_snapshotdate,
-        inp_user: req.body.inp_user,
+        inp_user: req.body.inp_user.trim(),
       },
     };
     console.log("req.body:", req.body);
