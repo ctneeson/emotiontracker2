@@ -24,6 +24,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
     <!-- Chart JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+    <!-- Get user.name -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the username from localStorage
+        const username = localStorage.getItem("username");
+        // Check if username exists in localStorage
+        if (username) {
+          // Now you can use the username as needed in your page
+          console.log("Username:", username);
+          // Make the username globally accessible by assigning it to the window object
+          window.username = username;
+        } else {
+          // Handle the case where the username is not found
+          console.error("Username not found in localStorage");
+        }
+      });
+    </script>
   </head>
 
   <body>
@@ -174,7 +192,7 @@
             </div>
             <div class="uk-container">
               <div uk-form-custom>
-                <button class="uk-button uk-button-primary uk-button-large" formaction="/new">Add</button>
+                <button id="addButton" class="uk-button uk-button-primary uk-button-large" formaction="/new">Add</button>
               </div>
             </div>
           </p>
@@ -341,6 +359,64 @@
         var selectedValues = $('.ui.dropdown').dropdown('get value');
         console.log("Selected Values:", selectedValues);
       }
+    </script>
+    <!--------------------->
+    <!-- Update Snapshot -->
+    <!--------------------->
+    <script>
+      function handleAddButtonClick() {
+        console.log("Executing handleAddButtonClick()");
+        // Display a confirmation dialog
+        UIkit.modal.confirm(`Add new snapshot?`).then(function () {
+          // User clicked "Ok", proceed with the API call
+          performAdd();
+        }, function () {
+          // User clicked "Cancel", do nothing or add additional logic if needed
+        });
+      }
+    
+      // Function to perform the API call after confirmation
+      function performAdd() {
+        // Ensure that the username is defined
+        if (!window.username) {
+          console.error("Username is not defined.");
+          return;
+        }
+        console.log("Adding new snapshot...");
+
+        var snapshotuser = window.username;
+        var anger = document.getElementById('anger').value;
+        var contempt = document.getElementById('contempt').value;
+        var disgust = document.getElementById('disgust').value;
+        var enjoyment = document.getElementById('enjoyment').value;
+        var fear = document.getElementById('fear').value;
+        var sadness = document.getElementById('sadness').value;
+        var surprise = document.getElementById('surprise').value;
+        var triggerDetails = $('.ui.dropdown').dropdown('get value');
+        var snapshotDate = document.getElementsByName('snapshot_date')[0].value;
+        var snapshotNotes = document.getElementsByName('snapshot_notes')[0].value;
+
+        var putData = {
+          inp_anger: anger,
+          inp_contempt: contempt,
+          inp_disgust: disgust,
+          inp_enjoyment: enjoyment,
+          inp_fear: fear,
+          inp_sadness: sadness,
+          inp_surprise: surprise,
+          inp_notes: snapshotNotes,
+          inp_triggerlist: triggerDetails,
+          inp_snapshotdate: snapshotDate,
+          inp_user: snapshotuser,
+        };
+        console.log("putData:", putData);
+
+        $.put('/new', putData, function (data) {
+          console.log(data);
+        });
+      }
+      
+      document.getElementById('addButton').addEventListener('click', handleAddButtonClick);
     </script>
   </body>
 </html>

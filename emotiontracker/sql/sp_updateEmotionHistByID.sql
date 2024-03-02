@@ -97,6 +97,8 @@ BEGIN
   SELECT emotionhistory_id, trigger_id, UPDATED_BY FROM temp_emotiontriggers;
 					
  COMMIT;
+ 
+ SELECT @eh_affectedRows, @tr_affectedRows_ins, @tr_affectedRows_del;
 
 END$$
 

@@ -52,60 +52,87 @@ exports.getEmotionHistByID = (req, res) => {
   });
 };
 
-exports.postNewEmotionHist = (req, res) => {
-  const { new_details, new_date } = req.body;
-  const vals = [
-    new_details.inp_anger,
-    new_details.inp_contempt,
-    new_details.inp_disgust,
-    new_details.inp_enjoyment,
-    new_details.inp_fear,
-    new_details.inp_sadness,
-    new_details.inp_surprise,
-    new_details.inp_notes,
-    new_details.inp_triggerlist,
-    new_details.inp_user,
-  ];
+exports.postNewEmotionHist = async (req, res) => {
+  const { snapshot_details } = req.body;
 
-  // Params: inp_anger, inp_contempt, inp_disgust, inp_enjoyment, inp_fear, inp_sadness, inp_surprise, inp_notes, inp_triggerlist, inp_user
+  if (!snapshot_details) {
+    console.error("Error: new_details is undefined in the request body.");
+    console.log("new_details:", snapshot_details);
+    res.status(400).json({
+      status: "failure",
+      message: "Invalid request body",
+    });
+    return;
+  }
+  console.log("req.body:", req.body);
+
   const insertSQL =
     "CALL sp_postNewEmotionHist(" +
-    mysql.escape(inp_anger) +
+    mysql.escape(snapshot_details.inp_anger) +
     ", " +
-    mysql.escape(inp_contempt) +
+    mysql.escape(snapshot_details.inp_contempt) +
     ", " +
-    mysql.escape(inp_disgust) +
+    mysql.escape(snapshot_details.inp_disgust) +
     ", " +
-    mysql.escape(inp_enjoyment) +
+    mysql.escape(snapshot_details.inp_enjoyment) +
     ", " +
-    mysql.escape(inp_fear) +
+    mysql.escape(snapshot_details.inp_fear) +
     ", " +
-    mysql.escape(inp_sadness) +
+    mysql.escape(snapshot_details.inp_sadness) +
     ", " +
-    mysql.escape(inp_surprise) +
+    mysql.escape(snapshot_details.inp_surprise) +
     ", " +
-    mysql.escape(inp_notes) +
+    mysql.escape(snapshot_details.inp_notes) +
     ", " +
-    mysql.escape(inp_triggerlist) +
+    mysql.escape(snapshot_details.inp_triggerlist) +
     ", " +
-    mysql.escape(inp_user) +
+    mysql.escape(snapshot_details.inp_snapshotdate) +
+    ", " +
+    mysql.escape(snapshot_details.inp_user) +
+    ", @eh_affectedRows, @tr_affectedRows" +
     ")";
 
-  conn.query(insertSQL, vals, (err, rows) => {
-    if (err) {
-      res.status(500);
-      res.json({
-        status: "failure",
-        message: err,
-      });
-    } else {
-      res.status(201);
+  const logMessage = `Executing SQL: ${insertSQL.replace(/\?/g, (match) =>
+    conn.escape(snapshot_details.shift())
+  )}`;
+  console.log(logMessage);
+
+  try {
+    const [results] = await conn
+      .promise()
+      .query({ sql: insertSQL, multipleStatements: true }, snapshot_details);
+
+    const affectedRows = results[0][0];
+    console.log("affectedRows", affectedRows);
+
+    const eh_affectedRows = affectedRows["@eh_affectedRows"];
+    const tr_affectedRows = affectedRows["@tr_affectedRows"];
+
+    // Continue with the rest of your response logic
+    if (eh_affectedRows > 0 || tr_affectedRows > 0) {
+      res.status(200);
       res.json({
         status: "success",
-        message: `Record ID ${rows.insertId} added to emotionhistory`,
+        message: `New snapshot added successfully`,
+        eh_affectedRows,
+        tr_affectedRows,
+      });
+    } else {
+      res.status(404);
+      res.json({
+        status: "failure",
+        message: `New snapshot insertion failed`,
+        eh_affectedRows,
+        tr_affectedRows,
       });
     }
-  });
+  } catch (error) {
+    res.status(500);
+    res.json({
+      status: "failure",
+      message: error.message,
+    });
+  }
 };
 
 exports.updateEmotionHistByID = async (req, res) => {
