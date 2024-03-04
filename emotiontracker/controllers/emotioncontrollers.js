@@ -102,10 +102,10 @@ exports.postNewEmotionHist = async (req, res) => {
         inp_fear: parseInt(req.body.inp_fear),
         inp_sadness: parseInt(req.body.inp_sadness),
         inp_surprise: parseInt(req.body.inp_surprise),
-        inp_notes: req.body.inp_notes.trim(),
-        inp_triggerlist: req.body.inp_triggerlist.trim(),
+        inp_notes: req.body.inp_notes,
+        inp_triggerlist: req.body.inp_triggerlist,
         inp_snapshotdate: req.body.inp_snapshotdate,
-        inp_user: req.body.inp_user.trim(),
+        inp_user: req.body.inp_user,
       },
     };
     console.log("req.body:", req.body);
@@ -117,8 +117,9 @@ exports.postNewEmotionHist = async (req, res) => {
     await axios
       .post(endpoint, snapshot_details)
       .then((response) => {
-        console.log(response.data);
-        res.redirect("/");
+        console.log("response.data:", response.data);
+        console.log("response.data.status:", response.data.status);
+        res.render("index", { loggedin: true, user: "ctn" });
       })
       .catch((error) => {
         console.log(`Error making API request: ${error}`);
@@ -206,15 +207,15 @@ exports.getTriggers = async (req, res) => {
   console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
 
   if (isloggedin) {
-    const endpoint = `http://localhost:3002/triggers`;
+    const endpoint = `http://localhost:3002/triggers/${userid}`;
     console.log(
       `Logged in. Method: getTriggers | Calling endpoint: ${endpoint}`
     );
     await axios
       .get(endpoint)
       .then((response) => {
-        const triggerValues = response.data.result;
-        console.log(triggerValues);
+        const triggerValues = response.data.result.triggerList;
+        console.log("triggerValues:", triggerValues);
         res.render("addemotionsnapshot", { triggerValues, role });
       })
       .catch((error) => {

@@ -275,7 +275,9 @@ exports.deleteEmotionHistByID = (req, res) => {
 // TRIGGERS //
 //////////////
 exports.getTriggers = (req, res) => {
-  const selectSQL = `SELECT * FROM triggers WHERE ACTIVE = 1`;
+  const userid = req.params.id;
+
+  const selectSQL = `CALL sp_getTriggers(${userid})`;
 
   conn.query(selectSQL, (err, rows) => {
     if (err) {
@@ -285,11 +287,12 @@ exports.getTriggers = (req, res) => {
         message: err,
       });
     } else {
+      console.log(rows[0][0]);
       res.status(200);
       res.json({
         status: "success",
-        message: `${rows.length} records retrieved`,
-        result: rows,
+        message: `${rows[0].length} record(s) retrieved`,
+        result: rows[0][0],
       });
     }
   });

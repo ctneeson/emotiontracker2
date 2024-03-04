@@ -25,21 +25,45 @@
     <!-- Chart JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
-    <!-- Get user.name -->
+    <!-- EventListener script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Get the username from localStorage
+
+        // 1. GET USER NAME
         const username = localStorage.getItem("username");
-        // Check if username exists in localStorage
         if (username) {
-          // Now you can use the username as needed in your page
           console.log("Username:", username);
-          // Make the username globally accessible by assigning it to the window object
           window.username = username;
         } else {
-          // Handle the case where the username is not found
           console.error("Username not found in localStorage");
         }
+
+        // 2. PREPARE TRIGGER VALUES FOR DROPDOWN MENU
+        const triggerValues = '<%= triggerValues %>'.split(',');
+        function populateDropdown() {
+          const dropdown = document.getElementById("trigger-details");
+          const menu = dropdown.querySelector(".menu");
+
+          menu.innerHTML = ""; // Clear existing options
+
+          triggerValues.forEach(function (value) { // Populate dropdown options from triggerValues array
+            const item = document.createElement("div");
+            item.classList.add("item");
+            item.setAttribute("data-value", value);
+            item.textContent = value;
+            menu.appendChild(item);
+          });
+          $(dropdown).dropdown("refresh"); // Refresh Semantic UI dropdown
+        }
+        populateDropdown(); // Call the function to populate dropdown when the page loads
+
+        // 3. DISABLE THE ADD BUTTON IF snapshot_date IS NOT POPULATED
+        const snapshotDateInput = document.querySelector('input[name="snapshot_date"]');
+        const addButton = document.getElementById('addButton');
+        addButton.disabled = !snapshotDateInput.value.trim(); // snapshot_date is empty - disable the button
+        snapshotDateInput.addEventListener('input', function () {
+          addButton.disabled = !snapshotDateInput.value.trim();
+        });
       });
     </script>
   </head>
@@ -163,9 +187,6 @@
                   <i class="dropdown icon"></i>
                   <div class="default text">Select triggers or enter new value</div>
                   <div class="menu">
-                    <% triggerValues.forEach(function(trigger) { %>
-                      <div class="item" data-value="<%= trigger.description %>"><%= trigger.description %></div>
-                    <% }); %>
                   </div>
                 </div>
               </div>
@@ -334,32 +355,6 @@
         },
       });
     </script>
-    <script>
-      console.log("Dropdown initialization script executed");
-    
-      // Initialize Semantic UI dropdown
-      $('.ui.dropdown').dropdown({
-        allowAdditions: true,
-        maxSelections: 10,
-        onChange: function(value, text, $selectedItem) {
-          console.log("Dropdown value changed");
-          updateSelectedValues();
-        },
-        onAdd: function(addedValue, addedText, $addedChoice) {
-          console.log("Item added");
-          updateSelectedValues();
-        },
-        onRemove: function(removedValue, removedText, $removedChoice) {
-          console.log("Item removed");
-          updateSelectedValues();
-        },
-      });
-    
-      function updateSelectedValues() {
-        var selectedValues = $('.ui.dropdown').dropdown('get value');
-        console.log("Selected Values:", selectedValues);
-      }
-    </script>
     <!--------------------->
     <!-- Update Snapshot -->
     <!--------------------->
@@ -412,7 +407,7 @@
         console.log("postData:", postData);
 
         $.post('/new', postData, function (data) {
-          console.log(data);
+          console.log("data:",data);
         });
       }
       
