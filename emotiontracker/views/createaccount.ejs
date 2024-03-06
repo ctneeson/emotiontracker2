@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emotion Tracker: Create New Account</title>
+    <!-- UIkit CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"
+    />
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+  </head>
+  <body>
+    <div class="uk-section">
+      <div class="uk-container">
+        <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
+          <div class="uk-navbar-left">
+            <img src="/imgs/brain_icon.png" />
+          </div>
+        </nav>
+      </div>
+      <h1 class="uk-heading-small uk-heading-line uk-text-center">
+        <span>Create New Account</span>
+      </h1>
+    </div>
+    <div class="uk-section uk-background-muted">
+      <div class="uk-container">
+        <h2 class="uk-text-large uk-heading-line uk-text-center">
+          <span>Enter New User Details</span>
+        </h2>
+        <form
+          method="post"
+          action="/useradmin/users/new"
+          class="uk-grid-small"
+          uk-grid
+        >
+          <div class="uk-width-1-2@s">
+            <input
+              class="uk-input"
+              name="username"
+              type="text"
+              placeholder="Username"
+              uk-tooltip="title: Please enter your chosen username (min. 3/max. 250 characters), or leave blank to use your email address as your login ID"
+              required
+            />
+          </div>
+          <div class="uk-width-1-2@s">
+            <input
+              class="uk-input"
+              name="email"
+              type="text"
+              placeholder="Email Address"
+              uk-tooltip="title: Please enter a valid email address (min. 3/max. 250 characters)"
+              required
+            />
+          </div>
+          <div class="uk-width-1-2@s">
+            <input
+              class="uk-input"
+              name="firstname"
+              type="text"
+              placeholder="First Name"
+              uk-tooltip="title: Please enter your first name (optional - max. 100 characters)"
+              required
+            />
+          </div>
+          <div class="uk-width-1-2@s">
+            <input
+              class="uk-input"
+              name="lastname"
+              type="text"
+              placeholder="Last Name"
+              uk-tooltip="title: Please enter your last name (optional - max. 100 characters)"
+              required
+            />
+          </div>
+          <div class="uk-width-1-2@s">
+            <input
+              class="uk-input"
+              name="userpass"
+              type="password"
+              placeholder="Password"
+              uk-tooltip="title: Please enter your chosen password (min. 3/max. 50 characters)"
+              required
+            />
+          </div>
+          <div class="uk-width-1-4@s">
+            <div uk-form-custom>
+              <button
+                class="uk-button uk-button-primary uk-align-center create-account-button"
+                style="width: 100%"
+              >
+                Create Account
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const emailInput = document.querySelector('input[name="email"]');
+        const createAccountButton = document.querySelector(
+          ".create-account-button"
+        );
+
+        const validateEmail = () => {
+          const email = emailInput.value.trim();
+          const emailLength = email.length;
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          createAccountButton.disabled =
+            !email ||
+            !emailPattern.test(email) ||
+            emailLength < 3 ||
+            emailLength > 250;
+        };
+
+        emailInput.addEventListener("input", validateEmail);
+
+        validateEmail();
+      });
+    </script>
+  </body>
+</html>

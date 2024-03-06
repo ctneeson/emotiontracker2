@@ -7,6 +7,9 @@ router.get("/", controller.getEmotionHist); // Get full history
 router.get("/new", async (req, res) => {
   await controller.getTriggers(req, res);
 });
+router.get("/createaccount", (req, res) => {
+  res.render("createaccount");
+});
 router.get("/edit/:id", controller.getEmotionHistByID); // Get individual snapshot
 router.get("/login", controller.getLogin);
 router.get("/logout", controller.getLogout);
@@ -17,5 +20,6 @@ router.post("/del/:id", controller.deleteEmotionHist); // Delte existing snapsho
 router.post("/triggers/new", controller.postNewTrigger); // Post new trigger
 router.post("/triggers/del/:id", controller.deleteTrigger); // Delete trigger
 router.post("/login", controller.postLogin);
+router.post("/useradmin/users/new", controller.postNewUser);
 
 module.exports = router;

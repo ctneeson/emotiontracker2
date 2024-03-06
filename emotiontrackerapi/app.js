@@ -11,9 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use("/", emotionrouter);
-/////////////////////////////////
-app.use("/useradmin", userrouter); // <<< CHECK THIS ONE
-/////////////////////////////////
+app.use("/useradmin", userrouter);
 
 app.listen(process.env.PORT, (err) => {
   if (err) return console.log(err);
