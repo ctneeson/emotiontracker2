@@ -27,7 +27,6 @@
     <!-- Triggers dropdown -->
     <script>
       $(document).ready(function () {
-        // Function to initialize dropdown with provided trigger list
         function initializeDropdown(initialTriggers, allTriggers) {
           var initialValues = initialTriggers.split(",").map(function (trigger) {
             return trigger.trim();
@@ -37,7 +36,6 @@
             return trigger.trim();
           });
 
-          // Update dropdown menu options
           var dropdownMenu = document.getElementById("trigger-details");
           var menuOptions = dropdownMenu.querySelector(".menu");
           menuOptions.innerHTML = ""; // Clear existing options
@@ -63,7 +61,6 @@
         console.log("Dropdown initialization script executed");
       });
     </script>
-    
   </head>
 
   <body>
@@ -135,54 +132,56 @@
               }
               </style>
 
-              <div class="uk-container">
-                <button class="uk-button uk-button-default" onclick="decreaseValue('anger')">-</button>
-                <input class="uk-range uk-form-width-medium" type="range" id="anger" min="0" max="10" step="1" value="<%= details[0].level_anger %>"/>
-                <button class="uk-button uk-button-default" onclick="increaseValue('anger')">+</button>
-                <label for="anger">Anger:</label>
-                <span class="uk-label" id="emo-anger"><%= details[0].level_anger %></span>
-              </div>
-              <div class="uk-container">
-                <button class="uk-button uk-button-default" onclick="decreaseValue('contempt')">-</button>
-                <input class="uk-range uk-form-width-medium" type="range" id="contempt" min="0" max="10" step="1" value="<%= details[0].level_contempt %>"/>
-                <button class="uk-button uk-button-default" onclick="increaseValue('contempt')">+</button>
-                <label for="contempt">Contempt:</label>
-                <span class="uk-label" id="emo-contempt"><%= details[0].level_contempt %></span>
-              </div>
-              <div class="uk-container">
-                <button class="uk-button uk-button-default" onclick="decreaseValue('disgust')">-</button>
-                <input class="uk-range uk-form-width-medium" type="range" id="disgust" min="0" max="10" step="1" value="<%= details[0].level_disgust %>"/>
-                <button class="uk-button uk-button-default" onclick="increaseValue('disgust')">+</button>
-                <label for="disgust">Disgust:</label>
-                <span class="uk-label" id="emo-disgust"><%= details[0].level_disgust %></span>
-              </div>
-              <div class="uk-container">
-                <button class="uk-button uk-button-default" onclick="decreaseValue('enjoyment')">-</button>
-                <input class="uk-range uk-form-width-medium" type="range" id="enjoyment" min="0" max="10" step="1" value="<%= details[0].level_enjoyment %>"/>
-                <button class="uk-button uk-button-default" onclick="increaseValue('enjoyment')">+</button>
-                <label for="enjoyment">Enjoyment:</label>
-                <span class="uk-label" id="emo-enjoyment"><%= details[0].level_enjoyment %></span>
-              </div>
-              <div class="uk-container">
-                <button class="uk-button uk-button-default" onclick="decreaseValue('fear')">-</button>
-                <input class="uk-range uk-form-width-medium" type="range" id="fear" min="0" max="10" step="1" value="<%= details[0].level_fear %>"/>
-                <button class="uk-button uk-button-default" onclick="increaseValue('fear')">+</button>
-                <label for="fear">Fear:</label>
-                <span class="uk-label" id="emo-fear"><%= details[0].level_fear %></span>
-              </div>
-              <div class="uk-container">
-                <button class="uk-button uk-button-default" onclick="decreaseValue('sadness')">-</button>
-                <input class="uk-range uk-form-width-medium" type="range" id="sadness" min="0" max="10" step="1" value="<%= details[0].level_sadness %>"/>
-                <button class="uk-button uk-button-default" onclick="increaseValue('sadness')">+</button>
-                <label for="sadness">Sadness:</label>
-                <span class="uk-label" id="emo-sadness"><%= details[0].level_sadness %></span>
-              </div>
-              <div class="uk-container">
-                <button class="uk-button uk-button-default" onclick="decreaseValue('surprise')">-</button>
-                <input class="uk-range uk-form-width-medium" type="range" id="surprise" min="0" max="10" step="1" value="<%= details[0].level_surprise %>"/>
-                <button class="uk-button uk-button-default" onclick="increaseValue('surprise')">+</button>
-                <label for="surprise">Surprise:</label>
-                <span class="uk-label" id="emo-surprise"><%= details[0].level_surprise %></span>
+              <div id="emotions-container">
+                <div class="uk-container">
+                  <button class="uk-button uk-button-default" onclick="decreaseValue('anger')">-</button>
+                  <input class="uk-range uk-form-width-medium" type="range" id="anger" min="0" max="10" step="1" value="<%= details[0].level_anger %>"/>
+                  <button class="uk-button uk-button-default" onclick="increaseValue('anger')">+</button>
+                  <label for="anger">Anger:</label>
+                  <span class="uk-label" id="emo-anger"><%= details[0].level_anger %></span>
+                </div>
+                <div class="uk-container">
+                  <button class="uk-button uk-button-default" onclick="decreaseValue('contempt')">-</button>
+                  <input class="uk-range uk-form-width-medium" type="range" id="contempt" min="0" max="10" step="1" value="<%= details[0].level_contempt %>"/>
+                  <button class="uk-button uk-button-default" onclick="increaseValue('contempt')">+</button>
+                  <label for="contempt">Contempt:</label>
+                  <span class="uk-label" id="emo-contempt"><%= details[0].level_contempt %></span>
+                </div>
+                <div class="uk-container">
+                  <button class="uk-button uk-button-default" onclick="decreaseValue('disgust')">-</button>
+                  <input class="uk-range uk-form-width-medium" type="range" id="disgust" min="0" max="10" step="1" value="<%= details[0].level_disgust %>"/>
+                  <button class="uk-button uk-button-default" onclick="increaseValue('disgust')">+</button>
+                  <label for="disgust">Disgust:</label>
+                  <span class="uk-label" id="emo-disgust"><%= details[0].level_disgust %></span>
+                </div>
+                <div class="uk-container">
+                  <button class="uk-button uk-button-default" onclick="decreaseValue('enjoyment')">-</button>
+                  <input class="uk-range uk-form-width-medium" type="range" id="enjoyment" min="0" max="10" step="1" value="<%= details[0].level_enjoyment %>"/>
+                  <button class="uk-button uk-button-default" onclick="increaseValue('enjoyment')">+</button>
+                  <label for="enjoyment">Enjoyment:</label>
+                  <span class="uk-label" id="emo-enjoyment"><%= details[0].level_enjoyment %></span>
+                </div>
+                <div class="uk-container">
+                  <button class="uk-button uk-button-default" onclick="decreaseValue('fear')">-</button>
+                  <input class="uk-range uk-form-width-medium" type="range" id="fear" min="0" max="10" step="1" value="<%= details[0].level_fear %>"/>
+                  <button class="uk-button uk-button-default" onclick="increaseValue('fear')">+</button>
+                  <label for="fear">Fear:</label>
+                  <span class="uk-label" id="emo-fear"><%= details[0].level_fear %></span>
+                </div>
+                <div class="uk-container">
+                  <button class="uk-button uk-button-default" onclick="decreaseValue('sadness')">-</button>
+                  <input class="uk-range uk-form-width-medium" type="range" id="sadness" min="0" max="10" step="1" value="<%= details[0].level_sadness %>"/>
+                  <button class="uk-button uk-button-default" onclick="increaseValue('sadness')">+</button>
+                  <label for="sadness">Sadness:</label>
+                  <span class="uk-label" id="emo-sadness"><%= details[0].level_sadness %></span>
+                </div>
+                <div class="uk-container">
+                  <button class="uk-button uk-button-default" onclick="decreaseValue('surprise')">-</button>
+                  <input class="uk-range uk-form-width-medium" type="range" id="surprise" min="0" max="10" step="1" value="<%= details[0].level_surprise %>"/>
+                  <button class="uk-button uk-button-default" onclick="increaseValue('surprise')">+</button>
+                  <label for="surprise">Surprise:</label>
+                  <span class="uk-label" id="emo-surprise"><%= details[0].level_surprise %></span>
+                </div>
               </div>
               <div class="uk-container">
                 <div class="label-input-container">
@@ -198,7 +197,7 @@
                   </div>
                 </div>
               </div>
-              <div class="uk-container">
+              <div class="uk-container" id="date-container">
                 <div class="label-input-container">
                   <div class="label-with-spacing">
                     <label for="snapshot_date">Date:</label>
@@ -234,8 +233,10 @@
       </div>
     </div>
     
+    <!------------------->
+    <!-- Range Sliders -->
+    <!------------------->
     <script>
-      // SLIDER
       function increaseValue(emotion) {
         var slider = document.getElementById(emotion);
         var output = document.getElementById("emo-" + emotion);
@@ -293,9 +294,7 @@
         });
       });
     
-      // Function to update the chart
-      function updateChart() {
-        // Update chart data based on the current slider values
+      function updateChart() { // Update chart data based on the current slider values
         var chartData = [];
         sliders.forEach(function (slider) {
           chartData.push(parseInt(slider.value));
@@ -305,10 +304,12 @@
         chartId.update();
       }
     </script>
+    <!----------------->
+    <!-- Radar Chart -->
+    <!----------------->
     <script>
       var chrt = document.getElementById("chartId").getContext("2d");
 
-      // Get the initial values from the sliders
       var initialData = [];
       sliders.forEach(function (slider) {
         initialData.push(parseInt(slider.value));
@@ -368,11 +369,11 @@
         },
       });
     </script>
+    <!-------------------------------------->
+    <!-- Dropdown Menu dynamic adjustment -->
+    <!-------------------------------------->
     <script>
-      console.log("Dropdown initialization script executed");
-    
-      // Initialize Semantic UI dropdown
-      $('.ui.dropdown').dropdown({
+      $('.ui.dropdown').dropdown({ // Initialize Semantic UI dropdown
         allowAdditions: true,
         maxSelections: 10,
         onChange: function(value, text, $selectedItem) {
@@ -393,6 +394,8 @@
         var selectedValues = $('.ui.dropdown').dropdown('get value');
         console.log("Selected Values:", selectedValues);
       }
+
+      console.log("Dropdown adjustment script executed");
     </script>
     <!--------------------->
     <!-- Update Snapshot -->
@@ -400,16 +403,50 @@
     <script>
       function handleUpdateButtonClick() {
         console.log("Executing handleUpdateButtonClick()");
-        // Display a confirmation dialog
+
+        var initialInputValues =
+        "<%= details[0].level_anger %>" + '|' +
+        "<%= details[0].level_contempt %>" + '|' +
+        "<%= details[0].level_disgust %>" + '|' +
+        "<%= details[0].level_enjoyment %>" + '|' +
+        "<%= details[0].level_fear %>" + '|' +
+        "<%= details[0].level_sadness %>" + '|' +
+        "<%= details[0].level_surprise %>" + '|' +
+        "<%= inputdate %>" + '|' +
+        "<%= details[0].notes.trim() %>" + '|' +
+        "<%= details[0].triggers.replace(', ', ',') %>";
+
+        function getCurrentValues() {
+          var currentInputValues =
+          parseInt(document.getElementById('anger').value) + '|' +
+          parseInt(document.getElementById('contempt').value) + '|' +
+          parseInt(document.getElementById('disgust').value) + '|' +
+          parseInt(document.getElementById('enjoyment').value) + '|' +
+          parseInt(document.getElementById('fear').value) + '|' +
+          parseInt(document.getElementById('sadness').value) + '|' +
+          parseInt(document.getElementById('surprise').value) + '|' +
+          document.getElementsByName('snapshot_date')[0].value + '|' +
+          document.getElementsByName('snapshot_notes')[0].value.trim() + '|' +
+          $('.ui.dropdown').dropdown('get value');
+
+          return currentInputValues;
+        }
+
+        var currentInputValues = getCurrentValues();
+        console.log("Initial Input Values:", initialInputValues);
+        console.log("Current Input Values:", currentInputValues);
+
+        if (initialInputValues === currentInputValues) {
+          UIkit.modal.alert("No changes have been made to this snapshot. There is nothing to update.");
+          return; // Stop further processing
+        }
+
         UIkit.modal.confirm(`Update snapshot?`).then(function () {
-          // User clicked "Ok", proceed with the API call
-          performUpdate();
-        }, function () {
-          // User clicked "Cancel", do nothing or add additional logic if needed
+          performUpdate(); // User clicked "Ok": proceed with the API call
+        }, function () { // User clicked "Cancel": do nothing
         });
       }
     
-      // Function to perform the API call after confirmation
       function performUpdate() {
         var snapshotid = '<%= snapshotid %>';
         var snapshotuser = '<%= snapshotuser %>';
@@ -446,6 +483,26 @@
       }
     
       document.getElementById('updateButton').addEventListener('click', handleUpdateButtonClick);
+    </script>
+    <!---------------------------------------------------->
+    <!-- Enable/Disable changes to date & range sliders -->
+    <!---------------------------------------------------->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var role = '<%= role %>';
+    
+        function toggleElements() { // Disable range sliders & buttons for non-admin
+          var emotionElements = document.querySelectorAll('#emotions-container input, #emotions-container button');
+          emotionElements.forEach(function (element) {
+            element.disabled = role !== 'administrator';
+          });
+    
+          var dateInput = document.querySelector('#date-container input'); // Disable snapshot_date input for non-admin
+          dateInput.disabled = role !== 'administrator';
+        }
+    
+        toggleElements();
+      });
     </script>
   </body>
 </html>
