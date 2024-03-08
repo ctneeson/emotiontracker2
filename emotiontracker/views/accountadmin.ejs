@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emotion Tracker: Account Admin</title>
+    <!-- UIkit CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"
+    />
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Chart JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  </head>
+
+  <body>
+    <div class="uk-section">
+      <div class="uk-container">
+        <!-- prettier-ignore -->
+        <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar="" style="width: 100%">
+          <div class="uk-navbar-left">
+            <img src="/imgs/brain_icon.png" />
+
+            <ul class="uk-navbar-nav">
+              <% if (loggedin) { %>
+              <li class="uk-active"><a href="/">Snapshots</a></li>
+              <li class="uk-parent"><a href="#" onclick="navigateToAddPage()">Add</a></li>
+              <% } %>
+          </ul>
+          </div>
+          <% if (!loggedin) { %>
+          <div class="uk-navbar-center">
+            <ul class="uk-navbar-nav">
+              <li class="uk-active"><a href="/createaccount">Create Account</a></li>
+            </ul>
+          </div>
+          <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+              <li class="uk-active"><a href="/login">Login</a></li>
+            </ul>
+          </div>
+          <% } else { %>
+          <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+              <li class="uk-active"><a href="/logout">Logout</a></li>
+            </ul>
+          </div>
+          <% } %>
+        </nav>
+      </div>
+    </div>
+
+    <div class="uk-section uk-background-muted">
+      <!-- prettier-ignore -->
+      <div class="uk-container">
+        <h2 class="uk-heading-small uk-heading-line uk-text-center">
+          <span>Account Admin</span>
+        </h2>
+        <% if (loggedin) { %>
+          <div class="uk-button uk-form-select" data-uk-form-select>
+            <span></span>
+            <select>
+              <% for (let row of details) { %>
+                <option value="<% row.name %>"><% row.name %></option>
+              <% } %>
+            </select>
+          </div>
+        <% } %>
+        <div class="uk-section uk-background-muted">
+          <div class="uk-container">
+            <h2 class="uk-text-large uk-heading-line uk-text-center">
+              <span>Manage Account Details</span>
+            </h2>
+            <form
+              method="post"
+              action="/useradmin/users/edit"
+              class="uk-grid-small"
+              uk-grid
+            >
+              <div class="uk-width-1-2@s">
+                <input
+                  class="uk-input"
+                  name="username"
+                  type="text"
+                  placeholder="Username"
+                  uk-tooltip="title: Username (min. 3/max. 250 characters): if left blank, email address will be used as login ID"
+                  required
+                />
+              </div>
+              <div class="uk-width-1-2@s">
+                <input
+                  class="uk-input"
+                  name="email"
+                  type="text"
+                  placeholder="Email Address"
+                  uk-tooltip="title: Email address (min. 3/max. 250 characters)"
+                  required
+                />
+              </div>
+              <div class="uk-width-1-2@s">
+                <input
+                  class="uk-input"
+                  name="firstname"
+                  type="text"
+                  placeholder="First Name"
+                  uk-tooltip="title: First name (optional - max. 100 characters)"
+                  required
+                />
+              </div>
+              <div class="uk-width-1-2@s">
+                <input
+                  class="uk-input"
+                  name="lastname"
+                  type="text"
+                  placeholder="Last Name"
+                  uk-tooltip="title: Last name (optional - max. 100 characters)"
+                  required
+                />
+              </div>
+              <div class="uk-width-1-2@s">
+                <input
+                  class="uk-input"
+                  name="userpass"
+                  type="password"
+                  placeholder="Password"
+                  uk-tooltip="title: Password (min. 3/max. 50 characters)"
+                  required
+                />
+              </div>
+              <% if (role == 'administrator') { %>
+                <div class="uk-width-1-2@s">
+                <input
+                  class="uk-input"
+                  name="userrole"
+                  type="text"
+                  placeholder="Role"
+                  uk-tooltip="title: Role (User / Administrator)"
+                  required
+                />
+              </div>
+              <% } %>
+                <div class="uk-width-1-4@s">
+                <div uk-form-custom>
+                  <button
+                    class="uk-button uk-button-primary uk-align-center create-account-button"
+                    style="width: 100%"
+                  >
+                    Update Account
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

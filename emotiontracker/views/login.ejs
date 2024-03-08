@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Emotion Tracker</title>
     <!-- UIkit CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"
+    />
     <!-- UIkit JS -->
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
   </head>
   <body>
+    <% if (popupMessage) { %> UIkit.modal.alert(popupMessage); <% } %>
     <div class="uk-section">
       <div class="uk-container">
         <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
@@ -34,10 +38,22 @@
         <% } %>
         <form method="post" action="/login" class="uk-grid-small" uk-grid>
           <div class="uk-width-1-2@s">
-            <input class="uk-input" name="username" type="text" placeholder="Username" required/>
+            <input
+              class="uk-input"
+              name="username"
+              type="text"
+              placeholder="Username"
+              required
+            />
           </div>
           <div class="uk-width-1-2@s">
-            <input class="uk-input" name="userpass" type="password" placeholder="Password" required/>
+            <input
+              class="uk-input"
+              name="userpass"
+              type="password"
+              placeholder="Password"
+              required
+            />
           </div>
           <div class="uk-width-1-4@s">
             <div uk-form-custom>

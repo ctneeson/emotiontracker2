@@ -15,7 +15,6 @@ BEGIN
 
  START TRANSACTION;
  
- /*- Add emotion levels & notes to emotionhistory table -*/
  INSERT INTO emotiontracker_users (name, firstname, lastname, email, password, type_id) VALUES (inp_name, inp_firstname, inp_lastname, inp_email, inp_password, inp_typeid);
  SET ins_rows = ROW_COUNT();
 

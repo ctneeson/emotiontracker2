@@ -13,6 +13,7 @@ router.get("/createaccount", (req, res) => {
 router.get("/edit/:id", controller.getEmotionHistByID); // Get individual snapshot
 router.get("/login", controller.getLogin);
 router.get("/logout", controller.getLogout);
+router.get("/accountadmin", controller.getUsers);
 
 router.post("/new", controller.postNewEmotionHist); // Post new snapshot
 router.post("/edit/:id", controller.updateEmotionHistByID); // Update existing snapshot

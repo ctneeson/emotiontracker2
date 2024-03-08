@@ -1,6 +1,27 @@
 const conn = require("./../utils/dbconn");
 const mysql = require("mysql2");
 
+exports.getUsers = (req, res) => {
+  const selectSQL = `CALL sp_getUsers()`;
+
+  conn.query(selectSQL, (err, rows) => {
+    if (err) {
+      res.status(500);
+      res.json({
+        status: "failure",
+        message: err,
+      });
+    } else {
+      res.status(200);
+      res.json({
+        status: "success",
+        message: `${rows.length} records retrieved`,
+        result: rows,
+      });
+    }
+  });
+};
+
 exports.getUserDetails = (req, res) => {
   const { id } = req.params;
 
@@ -117,7 +138,7 @@ exports.postNewUser = async (req, res) => {
       res.status(200);
       res.json({
         status: "success",
-        message: `New user created successfully`,
+        message: `New user ${inp_name} created successfully`,
         ins_rows,
       });
     } else {
@@ -135,4 +156,60 @@ exports.postNewUser = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+exports.putUserDetails = (req, res) => {
+  const { userid } = req.params;
+  console.log("req.params", req.params);
+  const { account_details } = req.body;
+  console.log("account_details", account_details);
+
+  const updateSQL =
+    "CALL sp_updateUser(" +
+    mysql.escape(account_details.inp_id) +
+    ", " +
+    mysql.escape(account_details.inp_name) +
+    ", " +
+    mysql.escape(account_details.inp_firstname) +
+    ", " +
+    mysql.escape(account_details.inp_lastname) +
+    ", " +
+    mysql.escape(account_details.inp_email) +
+    ", " +
+    mysql.escape(account_details.inp_password) +
+    ", " +
+    mysql.escape(account_details.inp_role) +
+    ", @upd_affectedRows" +
+    ")";
+
+  const logMessage = `Executing SQL: ${updateSQL.replace(/\?/g, (match) =>
+    conn.escape(account_details.shift())
+  )}`;
+  console.log(logMessage);
+
+  conn.query(updateSQL, (err, rows) => {
+    if (err) {
+      res.status(500);
+      res.json({
+        status: "failure",
+        message: err,
+      });
+    } else {
+      if (rows.length > 0) {
+        var upd_affectedRows = rows[0][0]["@upd_affectedRows"];
+        res.status(200);
+        res.json({
+          status: "success",
+          message: `${upd_affectedRows} record(s) updated`,
+          result: rows,
+        });
+      } else {
+        res.status(404);
+        res.json({
+          status: "failure",
+          message: `Invalid User ID ${userid}`,
+        });
+      }
+    }
+  });
 };
