@@ -25,12 +25,10 @@ BEGIN
   password = inp_password,
   type_id = (SELECT type_id FROM emotiontracker_userstypes WHERE role = inp_role)
  WHERE id = inp_id;
- SET upd_affectedRows = ROW_COUNT();
+ SELECT ROW_COUNT() AS upd_affectedRows;
 
  COMMIT;
  
- SELECT @upd_affectedRows;
-
 END$$
 
 DELIMITER ;

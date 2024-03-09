@@ -151,25 +151,28 @@
             const inp_lastname = lastnameInput.value.trim();
             const inp_password = passwordInput.value.trim();
 
-            const confirmCreation = confirm("Continue with account creation?");
+            UIkit.modal.confirm("Continue with account creation?").then(
+              function () {
+                const user_details = {
+                  user_details: {
+                    inp_name,
+                    inp_firstname,
+                    inp_lastname,
+                    inp_email,
+                    inp_password,
+                    inp_typeid: 2,
+                  },
+                };
+                console.log("user_details:", user_details);
 
-            if (confirmCreation) {
-              const user_details = {
-                user_details: {
-                  inp_name,
-                  inp_firstname,
-                  inp_lastname,
-                  inp_email,
-                  inp_password,
-                  inp_typeid: 2,
-                },
-              };
-              console.log("user_details:", user_details);
-
-              $.post("/useradmin/users/new", user_details, function (data) {
-                console.log("data:", data);
-              });
-            }
+                $.post("/useradmin/users/new", user_details, function (data) {
+                  console.log("data:", data);
+                });
+              },
+              function () {
+                // Handle the case where the user cancels the confirmation
+              }
+            );
           }
         };
 

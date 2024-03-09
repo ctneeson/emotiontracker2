@@ -1,7 +1,12 @@
-//const conn = require("./../utils/dbconn");
 const axios = require("axios");
 
-// SELECT ALL EMOTIONHISTORY SNAPSHOTS
+//////////////////////////////////////////////////////
+// EMOTIONHISTORY CALLS:                            //
+// GET ALL SNAPSHOTS FOR USER - getEmotionHist      //
+// GET SINGLE SNAPSHOT - getEmotionHistByID         //
+// ADD NEW SNAPSHOT - postNewEmotionHist            //
+// UPDATE EXISTING SNAPSHOT - updateEmotionHistByID //
+//////////////////////////////////////////////////////
 exports.getEmotionHist = async (req, res) => {
   var userinfo = {};
   const { isloggedin, userid, role } = req.session;
@@ -52,37 +57,6 @@ exports.getEmotionHist = async (req, res) => {
     });
 };
 
-exports.getUsers = async (req, res) => {
-  var userinfo = {};
-  const { isloggedin, userid, role } = req.session;
-  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
-
-  if (isloggedin) {
-    const { id } = req.params;
-    const endpoint = `http://localhost:3002/useradmin/users`;
-    console.log(`Logged in. Method: getUsers | Calling endpoint: ${endpoint}`);
-
-    await axios
-      .get(endpoint)
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data[0]);
-        res.render("accountadmin", {
-          details: data[0],
-          loggedin: isloggedin,
-          role,
-        });
-      })
-      .catch((error) => {
-        console.log(`Error making API request: ${error}`);
-      });
-  } else {
-    console.log(`Not logged in: redirecting to home page.`);
-    res.redirect("/");
-  }
-};
-
-// SELECT SINGLE EMOTIONHISTORY SNAPSHOT
 exports.getEmotionHistByID = async (req, res) => {
   const { isloggedin, userid, role } = req.session;
   console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
@@ -110,7 +84,6 @@ exports.getEmotionHistByID = async (req, res) => {
   }
 };
 
-// ADD NEW EMOTIONHISTORY SNAPSHOT
 exports.postNewEmotionHist = async (req, res) => {
   const { isloggedin, userid, role } = req.session;
   console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
@@ -153,7 +126,6 @@ exports.postNewEmotionHist = async (req, res) => {
   }
 };
 
-// UPDATE EMOTIONHISTORY SNAPSHOT
 exports.updateEmotionHistByID = async (req, res) => {
   const { isloggedin, userid, role } = req.session;
   console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
@@ -250,58 +222,12 @@ exports.getTriggers = async (req, res) => {
   }
 };
 
-// ADD NEW TRIGGER
-exports.postNewTrigger = async (req, res) => {
-  const { isloggedin, userid, role } = req.session;
-  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
-
-  if (isloggedin) {
-    const vals = ({ new_details, new_date } = req.body);
-    const endpoint = `http://localhost:3002/triggers/new`;
-    console.log(
-      `Logged in. Method: postNewTrigger | Calling endpoint: ${endpoint}`
-    );
-    await axios
-      .post(endpoint, vals)
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-        res.redirect("/");
-      })
-      .catch((error) => {
-        console.log(`Error making API request: ${error}`);
-      });
-  } else {
-    console.log(`Not logged in: redirecting to home page.`);
-    res.redirect("/");
-  }
-};
-
-// DELETE TRIGGER
-exports.deleteTrigger = async (req, res) => {
-  const { isloggedin, userid, role } = req.session;
-  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
-
-  if (isloggedin) {
-    const endpoint = `http://localhost:3002/triggers/${snapshot_id}`;
-    console.log(
-      `Logged in. Method: deleteTrigger | Calling endpoint: ${endpoint}`
-    );
-    await axios
-      .delete(endpoint)
-      .then((response) => {
-        console.log(response.data);
-        res.redirect("/");
-      })
-      .catch((error) => {
-        console.log(`Error making API request: ${error}`);
-      });
-  } else {
-    console.log(`Not logged in: redirecting to home page.`);
-    res.redirect("/");
-  }
-};
-
+/////////////////////////////////////
+// LOGIN CALLS:                    //
+// SEND LOGIN DETAILS - postLogin  //
+// VALIDATE LOGIN - getLogin       //
+// VALIDATE LOGOUT - getLogout     //
+/////////////////////////////////////
 exports.getLogin = (req, res) => {
   const logindata = { status: null };
   res.render("login", { loginsuccess: logindata });
@@ -309,7 +235,7 @@ exports.getLogin = (req, res) => {
 
 exports.postLogin = async (req, res) => {
   const vals = ({ username, userpass } = req.body);
-  console.log(vals);
+  console.log("vals:", vals);
   const endpoint = `http://localhost:3002/useradmin/users`;
   console.log(`Method: postLogin | Calling endpoint: ${endpoint}`);
   await axios
@@ -346,6 +272,48 @@ exports.getLogout = (req, res) => {
   });
 };
 
+/////////////////////////////////////
+// USER CALLS:                     //
+// GET ACCOUNT DETAILS - getUsers  //
+// CREATE ACCOUNT - postNewUser    //
+// UPDATE ACCOUNT - putUserDetails //
+// DELETE ACCOUNT - deleteUser     //
+/////////////////////////////////////
+exports.getUsers = async (req, res) => {
+  const { isloggedin, userid, role } = req.session;
+  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
+
+  if (isloggedin) {
+    const user_details = {
+      user_details: {
+        inp_userid: req.session.userid,
+        inp_role: req.session.role,
+      },
+    };
+    const endpoint = `http://localhost:3002/useradmin/users`;
+    console.log(`Logged in. Method: getUsers | Calling endpoint: ${endpoint}`);
+    console.log(`Parameters: user_details: ${user_details}`);
+
+    await axios
+      .get(endpoint, user_details)
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data[0]);
+        res.render("accountadmin", {
+          details: data[0],
+          loggedin: isloggedin,
+          role,
+        });
+      })
+      .catch((error) => {
+        console.log(`Error making API request: ${error}`);
+      });
+  } else {
+    console.log(`Not logged in: redirecting to home page.`);
+    res.redirect("/");
+  }
+};
+
 exports.postNewUser = async (req, res) => {
   const user_details = {
     user_details: {
@@ -359,6 +327,7 @@ exports.postNewUser = async (req, res) => {
   };
   const endpoint = `http://localhost:3002/useradmin/users/new`;
   console.log(`Method: postNewUser | Calling endpoint: ${endpoint}`);
+  console.log(`Parameters: user_details: ${user_details}`);
   await axios
     .post(endpoint, user_details)
     .then((response) => {
@@ -375,31 +344,116 @@ exports.postNewUser = async (req, res) => {
 };
 
 exports.putUserDetails = async (req, res) => {
-  //const { isloggedin, userid, role } = req.session;
-  //console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
-  const userid = req.body.inp_id;
+  const { isloggedin, userid, role } = req.session;
+  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
 
-  const user_details = {
-    user_details: {
-      inp_id: req.body.inp_id,
-      inp_name: req.body.inp_name.trim(),
-      inp_firstname: req.body.inp_firstname.trim(),
-      inp_lastname: req.body.inp_lastname.trim(),
-      inp_email: req.body.inp_email.trim(),
-      inp_password: req.body.inp_password,
-      inp_role: inp_role,
-    },
-  };
-  const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
-  console.log(`Method: postNewUser | Calling endpoint: ${endpoint}`);
-  await axios
-    .post(endpoint, user_details)
-    .then((response) => {
-      const data = response.data;
-      console.log(data);
-      res.redirect("/");
-    })
-    .catch((error) => {
-      console.log(`Error making API request: ${error}`);
-    });
+  if (isloggedin) {
+    const user_details = {
+      user_details: {
+        inp_id: userid,
+        inp_name: req.body.inp_name.trim(),
+        inp_firstname: req.body.inp_firstname.trim(),
+        inp_lastname: req.body.inp_lastname.trim(),
+        inp_email: req.body.inp_email.trim(),
+        inp_password: req.body.inp_password,
+        inp_role: inp_role,
+      },
+    };
+    const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
+    console.log(`Method: postNewUser | Calling endpoint: ${endpoint}`);
+    console.log(`Parameters: userid: ${userid}`);
+    console.log(`Parameters: user_details: ${user_details}`);
+    await axios
+      .post(endpoint, user_details)
+      .then((response) => {
+        const data = response.data;
+        console.log(data);
+        res.redirect("/");
+      })
+      .catch((error) => {
+        console.log(`Error making API request: ${error}`);
+      });
+  } else {
+    console.log(`Not logged in: redirecting to home page.`);
+    res.redirect("/");
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const { isloggedin, userid, role } = req.session;
+  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
+
+  if (isloggedin) {
+    const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
+    console.log(`Method: postNewUser | Calling endpoint: ${endpoint}`);
+    console.log(`Parameters: userid: ${userid}`);
+    await axios
+      .post(endpoint)
+      .then((response) => {
+        const data = response.data;
+        console.log(data);
+        res.redirect("/");
+      })
+      .catch((error) => {
+        console.log(`Error making API request: ${error}`);
+      });
+  } else {
+    console.log(`Not logged in: redirecting to home page.`);
+    res.redirect("/");
+  }
+};
+
+////////////////////////////////////
+// TRIGGER CALLS:                 //
+// ADD TRIGGER - postNewTrigger   //
+// DELETE TRIGGER - deleteTrigger //
+////////////////////////////////////
+exports.postNewTrigger = async (req, res) => {
+  const { isloggedin, userid, role } = req.session;
+  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
+
+  if (isloggedin) {
+    const vals = ({ new_details, new_date } = req.body);
+    const endpoint = `http://localhost:3002/triggers/new`;
+    console.log(
+      `Logged in. Method: postNewTrigger | Calling endpoint: ${endpoint}`
+    );
+    await axios
+      .post(endpoint, vals)
+      .then((response) => {
+        const data = response.data;
+        console.log(data);
+        res.redirect("/");
+      })
+      .catch((error) => {
+        console.log(`Error making API request: ${error}`);
+      });
+  } else {
+    console.log(`Not logged in: redirecting to home page.`);
+    res.redirect("/");
+  }
+};
+
+exports.deleteTrigger = async (req, res) => {
+  const { isloggedin, userid, role } = req.session;
+  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
+
+  if (isloggedin) {
+    const endpoint = `http://localhost:3002/triggers/${snapshot_id}`;
+    console.log(
+      `Logged in. Method: deleteTrigger | Calling endpoint: ${endpoint}`
+    );
+    await axios
+      .delete(endpoint)
+      .then((response) => {
+        console.log(response.data);
+        res.redirect("/");
+      })
+      .catch((error) => {
+        console.log(`Error making API request: ${error}`);
+      });
+  } else {
+    console.log(`Not logged in: redirecting to home page.`);
+    res.redirect("/");
+  }
 };

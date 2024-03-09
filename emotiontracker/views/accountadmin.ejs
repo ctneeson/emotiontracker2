@@ -62,7 +62,7 @@
         </h2>
         <% if (loggedin) { %>
           <div class="uk-button uk-form-select" data-uk-form-select>
-            <span></span>
+            <span>User:</span>
             <select>
               <% for (let row of details) { %>
                 <option value="<% row.name %>"><% row.name %></option>

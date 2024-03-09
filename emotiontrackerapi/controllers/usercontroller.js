@@ -1,8 +1,90 @@
 const conn = require("./../utils/dbconn");
 const mysql = require("mysql2");
 
+///////////////////////////////////////
+// USER CALLS:                       //
+// VALIDATE USER LOGIN - postLogin   //
+// GET ACCOUNT DETAILS - getUsers    //
+// GET USER DETAILS - getUserDetails //
+// CREATE ACCOUNT - postNewUser      //
+// UPDATE ACCOUNT - putUserDetails   //
+// DELETE ACCOUNT - deleteUser       //
+///////////////////////////////////////
+
+// Called from http://localhost:3000/login
+// Validates user ID & password combination to allow login
+exports.postLogin = (req, res) => {
+  const { username, userpass } = req.body;
+  const vals = [username, userpass];
+
+  if (!username || !userpass) {
+    console.error("Error: undefined details in the request body.");
+    console.log("username:", username);
+    console.log("userpass:", userpass);
+    res.status(400).json({
+      status: "failure",
+      message: "Invalid request body",
+    });
+    return;
+  }
+
+  const checkuserSQL = `SELECT id FROM emotiontracker_users
+                        WHERE emotiontracker_users.name = '${username}' 
+                        AND emotiontracker_users.password = '${userpass}'`;
+
+  console.log("Executing SQL:", checkuserSQL);
+  conn.query(checkuserSQL, vals, (err, rows) => {
+    if (err) {
+      res.status(500);
+      res.json({
+        status: "failure",
+        message: err,
+      });
+    } else {
+      if (rows.length > 0) {
+        res.status(200);
+        res.json({
+          status: "success",
+          message: `${rows.length} records retrieved`,
+          result: rows,
+        });
+      } else {
+        res.status(401);
+        res.json({
+          status: "failure",
+          message: `Invalid user credentials`,
+        });
+      }
+    }
+  });
+};
+
+// Called from http://localhost:3000/accountadmin
+// Returns user details based on role ('administrator': all users / 'user': individual user)
 exports.getUsers = (req, res) => {
-  const selectSQL = `CALL sp_getUsers()`;
+  const { user_details } = req.body;
+
+  if (!user_details) {
+    console.error("Error: user_details is undefined in the request body.");
+    console.log("user_details:", user_details);
+    res.status(400).json({
+      status: "failure",
+      message: "Invalid request body",
+    });
+    return;
+  }
+
+  const selectSQL =
+    "CALL sp_getUsers(" +
+    mysql.escape(user_details.inp_userid) +
+    ", " +
+    mysql.escape(user_details.inp_role) +
+    ")";
+
+  const logMessage = `Executing SQL: ${selectSQL.replace(/\?/g, (match) =>
+    conn.escape(user_details.shift())
+  )}`;
+  console.log(logMessage);
 
   conn.query(selectSQL, (err, rows) => {
     if (err) {
@@ -12,10 +94,11 @@ exports.getUsers = (req, res) => {
         message: err,
       });
     } else {
+      const numRows = rows[0].length;
       res.status(200);
       res.json({
         status: "success",
-        message: `${rows.length} records retrieved`,
+        message: `${numRows} record(s) retrieved`,
         result: rows,
       });
     }
@@ -25,12 +108,23 @@ exports.getUsers = (req, res) => {
 exports.getUserDetails = (req, res) => {
   const { id } = req.params;
 
-  const getuserSQL = `SELECT emotiontracker_users.name, emotiontracker_userstypes.role 
-                        FROM emotiontracker_users
-                        INNER JOIN emotiontracker_userstypes
-                         ON emotiontracker_users.type_id = emotiontracker_userstypes.type_id
-                        WHERE emotiontracker_users.id = '${id}'`;
+  if (!id) {
+    console.error("Error: User ID undefined in the request body.");
+    console.log("user id:", id);
+    res.status(400).json({
+      status: "failure",
+      message: "Invalid request body",
+    });
+    return;
+  }
 
+  const getuserSQL = `SELECT emotiontracker_users.name, emotiontracker_userstypes.role 
+                      FROM emotiontracker_users
+                      INNER JOIN emotiontracker_userstypes
+                       ON emotiontracker_users.type_id = emotiontracker_userstypes.type_id
+                      WHERE emotiontracker_users.id = '${id}'`;
+
+  console.log("Executing SQL:", getuserSQL);
   conn.query(getuserSQL, (err, rows) => {
     if (err) {
       res.status(500);
@@ -50,42 +144,7 @@ exports.getUserDetails = (req, res) => {
         res.status(404);
         res.json({
           status: "failure",
-          message: `Invalid ID ${id}`,
-        });
-      }
-    }
-  });
-};
-
-exports.postLogin = (req, res) => {
-  const { username, userpass } = req.body;
-  const vals = [username, userpass];
-
-  const checkuserSQL = `SELECT id FROM emotiontracker_users
-                          WHERE emotiontracker_users.name = '${username}' 
-                          AND emotiontracker_users.password = '${userpass}'`;
-
-  conn.query(checkuserSQL, vals, (err, rows) => {
-    if (err) {
-      res.status(500);
-      res.json({
-        status: "failure",
-        message: err,
-      });
-    } else {
-      console.log(`Length = ${rows.length}`);
-      if (rows.length > 0) {
-        res.status(200);
-        res.json({
-          status: "success",
-          message: `${rows.length} records retrieved`,
-          result: rows,
-        });
-      } else {
-        res.status(401);
-        res.json({
-          status: "failure",
-          message: `Invalid user credentials`,
+          message: `Invalid User ID ${id}`,
         });
       }
     }
@@ -138,7 +197,7 @@ exports.postNewUser = async (req, res) => {
       res.status(200);
       res.json({
         status: "success",
-        message: `New user ${inp_name} created successfully`,
+        message: `New user ${user_details.inp_name} created successfully`,
         ins_rows,
       });
     } else {
@@ -208,6 +267,55 @@ exports.putUserDetails = (req, res) => {
         res.json({
           status: "failure",
           message: `Invalid User ID ${userid}`,
+        });
+      }
+    }
+  });
+};
+
+exports.deleteUser = (req, res) => {
+  const username = req.params.name;
+  console.log("username", username);
+
+  if (!username) {
+    console.error("Error: undefined details in the request body.");
+    console.log("username:", username);
+    res.status(400).json({
+      status: "failure",
+      message: "Invalid request body",
+    });
+    return;
+  }
+
+  const deleteuserSQL =
+    "CALL sp_deleteUser(" + mysql.escape(username) + ", @del_rows" + ")";
+
+  const logMessage = `Executing SQL: ${deleteuserSQL.replace(/\?/g, (match) =>
+    conn.escape(req.body.shift())
+  )}`;
+  console.log(logMessage);
+
+  conn.query(deleteuserSQL, (err, rows) => {
+    if (err) {
+      res.status(500);
+      res.json({
+        status: "failure",
+        message: err,
+      });
+    } else {
+      if (rows.length > 0) {
+        var deletedRows = rows[0][0].del_rows;
+        res.status(200);
+        res.json({
+          status: "success",
+          message: `${deletedRows} record(s) deleted`,
+          result: rows,
+        });
+      } else {
+        res.status(401);
+        res.json({
+          status: "failure",
+          message: `Invalid user credentials`,
         });
       }
     }
