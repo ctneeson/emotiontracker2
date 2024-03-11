@@ -14,6 +14,7 @@ const mysql = require("mysql2");
 // Called from http://localhost:3000/login
 // Validates user ID & password combination to allow login
 exports.postLogin = (req, res) => {
+  console.log("Executing exports.postLogin...");
   const { username, userpass } = req.body;
   const vals = [username, userpass];
 
@@ -62,28 +63,26 @@ exports.postLogin = (req, res) => {
 // Called from http://localhost:3000/accountadmin
 // Returns user details based on role ('administrator': all users / 'user': individual user)
 exports.getUsers = (req, res) => {
-  const { user_details } = req.body;
+  console.log("Executing exports.getUsers...");
+  console.log("req.query:", req.query);
+  const uid = req.query.id;
+  const urole = req.query.role;
 
-  if (!user_details) {
-    console.error("Error: user_details is undefined in the request body.");
-    console.log("user_details:", user_details);
+  if (!uid || !urole) {
+    console.error(
+      `Error: undefined query parameters - uid: ${uid}, urole: ${urole}`
+    );
+    console.log(`uid: ${uid}, urole: ${urole}`);
     res.status(400).json({
       status: "failure",
-      message: "Invalid request body",
+      message: "Invalid query parameters",
     });
     return;
   }
 
-  const selectSQL =
-    "CALL sp_getUsers(" +
-    mysql.escape(user_details.inp_userid) +
-    ", " +
-    mysql.escape(user_details.inp_role) +
-    ")";
+  const selectSQL = `CALL sp_getUsers(${uid}, "${urole}")`;
 
-  const logMessage = `Executing SQL: ${selectSQL.replace(/\?/g, (match) =>
-    conn.escape(user_details.shift())
-  )}`;
+  const logMessage = `Executing SQL: ${selectSQL}`;
   console.log(logMessage);
 
   conn.query(selectSQL, (err, rows) => {
@@ -106,6 +105,7 @@ exports.getUsers = (req, res) => {
 };
 
 exports.getUserDetails = (req, res) => {
+  console.log("Executing exports.getUserDetails...");
   const { id } = req.params;
 
   if (!id) {
@@ -152,7 +152,16 @@ exports.getUserDetails = (req, res) => {
 };
 
 exports.postNewUser = async (req, res) => {
-  const { user_details } = req.body;
+  console.log("Executing exports.postNewUser...");
+  const user_details = {
+    inp_name: req.body["user_details[inp_name]"],
+    inp_firstname: req.body["user_details[inp_firstname]"],
+    inp_lastname: req.body["user_details[inp_lastname]"],
+    inp_email: req.body["user_details[inp_email]"],
+    inp_password: req.body["user_details[inp_password]"],
+    inp_typeid: req.body["user_details[inp_typeid]"],
+  };
+  console.log("user_details:", user_details);
 
   if (!user_details) {
     console.error("Error: user_details is undefined in the request body.");
@@ -190,7 +199,7 @@ exports.postNewUser = async (req, res) => {
       .promise()
       .query({ sql: insertSQL, multipleStatements: true }, user_details);
 
-    const ins_rows = results[0][0]["@ins_rows"];
+    const ins_rows = results[0][0].ins_rows;
     console.log("ins_rows:", ins_rows);
 
     if (ins_rows !== null) {
@@ -218,6 +227,7 @@ exports.postNewUser = async (req, res) => {
 };
 
 exports.putUserDetails = (req, res) => {
+  console.log("Executing exports.putUserDetails...");
   const { userid } = req.params;
   console.log("req.params", req.params);
   const { account_details } = req.body;
@@ -274,6 +284,7 @@ exports.putUserDetails = (req, res) => {
 };
 
 exports.deleteUser = (req, res) => {
+  console.log("Executing exports.deleteUser...");
   const username = req.params.name;
   console.log("username", username);
 

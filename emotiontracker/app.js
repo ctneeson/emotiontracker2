@@ -3,10 +3,13 @@ const morgan = require("morgan");
 const dotenv = require("dotenv").config({ path: "./config.env" });
 const session = require("express-session");
 const router = require("./routes/emotionroutes");
+const userRouter = require("./routes/userroutes");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
 
+app.use(cors());
 app.use(morgan("tiny"));
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));
@@ -20,6 +23,7 @@ app.use(
 );
 
 app.use("/", router);
+app.use("/useradmin", userRouter);
 app.set("view engine", "ejs");
 
 app.listen(process.env.PORT, (err) => {

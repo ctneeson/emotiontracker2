@@ -2,7 +2,10 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS sp_getEmotionHist;
 
-CREATE PROCEDURE IF NOT EXISTS sp_getEmotionHist()
+CREATE PROCEDURE IF NOT EXISTS sp_getEmotionHist(
+	IN inp_userid INT,
+	IN inp_role VARCHAR(100)
+)
 BEGIN
 
  SELECT
@@ -14,8 +17,8 @@ BEGIN
   eh.level_fear,
   eh.level_sadness,
   eh.level_surprise,
-  GROUP_CONCAT(t.id ORDER BY t.id ASC SEPARATOR ", ") AS triggerIDs,
-  GROUP_CONCAT(t.description ORDER BY t.id ASC SEPARATOR ", ") AS triggers,
+  GROUP_CONCAT(t.id ORDER BY t.id ASC SEPARATOR ",") AS triggerIDs,
+  GROUP_CONCAT(t.description ORDER BY t.id ASC SEPARATOR ",") AS triggers,
   eh.notes,
   eh.ACTIVE,
   eh.INSERT_DATE,
@@ -30,14 +33,10 @@ BEGIN
   ON et.trigger_id = t.id
   AND t.ACTIVE = 1
   AND et.ACTIVE = 1
+ WHERE ( (inp_role = 'user' AND eh.UPDATED_BY = (SELECT name FROM emotiontracker_users WHERE id = inp_userid) )
+         OR (inp_role = 'administrator') )
  GROUP BY eh.id;
 
 END$$
 
 DELIMITER ;
-
-
-
-/*
-CALL sp_getEmotionHist();
-*/

@@ -29,14 +29,14 @@
               <% if (loggedin) { %>
               <li class="uk-active"><a href="/">Snapshots</a></li>
               <li class="uk-parent"><a href="#" onclick="navigateToAddPage()">Add</a></li>
-              <li class="uk-active"><a href="/accountadmin">Account Admin</a></li>
+              <li class="uk-active"><a href="/useradmin/accountadmin">Account Admin</a></li>
               <% } %>
             </ul>
           </div>
           <% if (!loggedin) { %>
           <div class="uk-navbar-center">
             <ul class="uk-navbar-nav">
-              <li class="uk-active"><a href="/createaccount">Create Account</a></li>
+              <li class="uk-active"><a href="/useradmin/createaccount">Create Account</a></li>
             </ul>
           </div>
           <div class="uk-navbar-right">
@@ -67,102 +67,113 @@
           <span>My Emotion Tracker</span>
         </h2>
         <% } %>
-        <% if (loggedin) { %>
+    
+        <% if (loggedin && snapshot && snapshot.length > 0) { %>
         <div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
           <% const dateformat = { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'numeric', minute:'numeric', second:'numeric', hour12: false }; %>
           <% snapshot.forEach((row) => { %>
             <% var snapshotid = row.id; %>
-          <div>
-            <a href="/edit/<%= snapshotid %>" class="uk-display-block uk-card uk-card-body uk-card-default uk-link-toggle">
-              <% var rawdate = new Date(row.UPDATE_DATE); %>
-              <% var itemdate = new Intl.DateTimeFormat('en-GB', dateformat).format(rawdate); %>
-              <h3 class="uk-card-title">
-                <span class="uk-link-heading"><%= snapshotid + ': ' + itemdate %></span>
-              </h3>
-              <canvas id="chartId-<%= snapshotid %>" aria-label="chart" height="90" width="150"></canvas>
-              <%= row.items %>
-            </a>
-          </div>
+            <div>
+              <a href="/edit/<%= snapshotid %>" class="uk-display-block uk-card uk-card-body uk-card-default uk-link-toggle">
+                <% var rawdate = new Date(row.UPDATE_DATE); %>
+                <% var itemdate = new Intl.DateTimeFormat('en-GB', dateformat).format(rawdate); %>
+                <h3 class="uk-card-title">
+                  <span class="uk-link-heading"><%= snapshotid + ': ' + itemdate %></span>
+                </h3>
+                <canvas id="chartId-<%= snapshotid %>" aria-label="chart" height="90" width="150"></canvas>
+                <%= row.items %>
+              </a>
+            </div>
           <% }); %>
         </div>
+        <% } else if (loggedin) { %>
+        <p>No snapshots available.</p>
         <% } %>
       </div>
     </div>
     <script>
-      <% snapshot.forEach((row) => { %>
-        var chrt_<%= row.id %> = document.getElementById("chartId-<%= row.id %>").getContext("2d");
+      <% if (typeof snapshot !== 'undefined' && Array.isArray(snapshot) && snapshot.length > 0) { %>
+        <% snapshot.forEach((row) => { %>
+          var chrt_<%= row.id %> = document.getElementById("chartId-<%= row.id %>").getContext("2d");
 
-        var initialData_<%= row.id %> = [
-          <%= row.level_anger %>,
-          <%= row.level_contempt %>,
-          <%= row.level_disgust %>,
-          <%= row.level_enjoyment %>,
-          <%= row.level_fear %>,
-          <%= row.level_sadness %>,
-          <%= row.level_surprise %>,
-        ];
+          var initialData_<%= row.id %> = [
+            <%= row.level_anger %>,
+            <%= row.level_contempt %>,
+            <%= row.level_disgust %>,
+            <%= row.level_enjoyment %>,
+            <%= row.level_fear %>,
+            <%= row.level_sadness %>,
+            <%= row.level_surprise %>,
+          ];
 
-        var chartId_<%= row.id %> = new Chart(chrt_<%= row.id %>, {
-          type: "radar",
-          data: {
-            labels: [
-              "Anger",
-              "Contempt",
-              "Disgust",
-              "Enjoyment",
-              "Fear",
-              "Sadness",
-              "Surprise",
-            ],
-            datasets: [
-              {
-                data: initialData_<%= row.id %>,
-                backgroundColor: ["#FFF17625"],
-                pointBackgroundColor: [
-                  "yellow",
-                  "aqua",
-                  "pink",
-                  "lightgreen",
-                  "lightblue",
-                  "gold",
-                  "purple",
-                ],
-                borderColor: ["black"],
-                borderWidth: 1,
-                pointRadius: 6,
+          var chartId_<%= row.id %> = new Chart(chrt_<%= row.id %>, {
+            type: "radar",
+            data: {
+              labels: [
+                "Anger",
+                "Contempt",
+                "Disgust",
+                "Enjoyment",
+                "Fear",
+                "Sadness",
+                "Surprise",
+              ],
+              datasets: [
+                {
+                  data: initialData_<%= row.id %>,
+                  backgroundColor: ["#FFF17625"],
+                  pointBackgroundColor: [
+                    "yellow",
+                    "aqua",
+                    "pink",
+                    "lightgreen",
+                    "lightblue",
+                    "gold",
+                    "purple",
+                  ],
+                  borderColor: ["black"],
+                  borderWidth: 1,
+                  pointRadius: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: false,
+                },
               },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-            legend: {
-                display: false,
+              scale: {
+                ticks: {
+                  beginAtZero: true,
+                },
+                min: 0,
+                max: 10,
+              },
+              elements: {
+                line: {
+                  borderWidth: 3,
+                },
               },
             },
-            scale: {
-              ticks: {
-                beginAtZero: true,
-              },
-              min: 0,
-              max: 10,
-            },
-            elements: {
-              line: {
-                borderWidth: 3,
-              },
-            },
-          },
-        });
-      <% }); %>
+          });
+        <% }); %>
+      <% } else { %>
+        console.log("No snapshots available."); // or handle it as needed
+      <% } %>
     </script>
     <script>
       function navigateToAddPage() {
-        // Set the user.name in localStorage
-        localStorage.setItem("username", "<%= user.name %>");
+        <% if (typeof user !== 'undefined' && user && user.name) { %>
+          // Set the user.name in localStorage
+          localStorage.setItem("username", "<%= user.name %>");
 
-        // Navigate to the "/new" page
-        window.location.href = "/new";
+          // Navigate to the "/new" page
+          window.location.href = "/new";
+        <% } else { %>
+          console.log("User is undefined or does not have a name."); // or handle it as needed
+        <% } %>
       }
     </script>
   </body>

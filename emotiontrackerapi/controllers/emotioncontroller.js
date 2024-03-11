@@ -2,7 +2,13 @@ const conn = require("../utils/dbconn");
 const mysql = require("mysql2");
 
 exports.getEmotionHist = (req, res) => {
-  const selectSQL = `CALL sp_getEmotionHist()`;
+  console.log("Executing exports.getEmotionHist...");
+  console.log("req.query:", req.query);
+  const uid = req.query.id;
+  const urole = req.query.role;
+  const selectSQL = `CALL sp_getEmotionHist(${uid}, "${urole}")`;
+  const logMessage = `Executing SQL: ${selectSQL}`;
+  console.log(logMessage);
 
   conn.query(selectSQL, (err, rows) => {
     if (err) {
@@ -12,10 +18,11 @@ exports.getEmotionHist = (req, res) => {
         message: err,
       });
     } else {
+      console.log(rows[0]);
       res.status(200);
       res.json({
         status: "success",
-        message: `${rows.length} records retrieved`,
+        message: `${rows[0].length} records retrieved`,
         result: rows,
       });
     }
@@ -23,6 +30,7 @@ exports.getEmotionHist = (req, res) => {
 };
 
 exports.getEmotionHistByID = (req, res) => {
+  console.log("Executing exports.getEmotionHistByID...");
   const { id } = req.params;
   const selectSQL = `CALL sp_getEmotionHistByID(${id})`;
 
@@ -53,6 +61,7 @@ exports.getEmotionHistByID = (req, res) => {
 };
 
 exports.postNewEmotionHist = async (req, res) => {
+  console.log("Executing exports.postNewEmotionHist...");
   const { snapshot_details } = req.body;
 
   if (!snapshot_details) {
@@ -136,6 +145,7 @@ exports.postNewEmotionHist = async (req, res) => {
 };
 
 exports.updateEmotionHistByID = async (req, res) => {
+  console.log("Executing exports.updateEmotionHistByID...");
   const id = req.params.id;
   const { snapshot_details } = req.body;
 
@@ -242,6 +252,7 @@ exports.updateEmotionHistByID = async (req, res) => {
 };
 
 exports.deleteEmotionHistByID = (req, res) => {
+  console.log("Executing exports.deleteEmotionHistByID...");
   const run_id = req.params.id;
 
   const deleteSQL = `CALL sp_deleteEmotionHistByID(${run_id})`;
@@ -275,6 +286,7 @@ exports.deleteEmotionHistByID = (req, res) => {
 // TRIGGERS //
 //////////////
 exports.getTriggers = (req, res) => {
+  console.log("Executing exports.getTriggers...");
   const userid = req.params.id;
 
   const selectSQL = `CALL sp_getTriggers(${userid})`;
@@ -299,6 +311,7 @@ exports.getTriggers = (req, res) => {
 };
 
 exports.postNewTrigger = (req, res) => {
+  console.log("Executing exports.postNewTrigger...");
   const { new_details, new_date } = req.body;
   const vals = [new_details, new_date];
 
@@ -322,6 +335,7 @@ exports.postNewTrigger = (req, res) => {
 };
 
 exports.deleteTrigger = (req, res) => {
+  console.log("Executing exports.deleteTrigger...");
   const run_id = req.params.id;
 
   const deleteSQL = `DELETE FROM triggers WHERE id = ${run_id}`;

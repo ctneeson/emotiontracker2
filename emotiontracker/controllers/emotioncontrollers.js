@@ -8,53 +8,55 @@ const axios = require("axios");
 // UPDATE EXISTING SNAPSHOT - updateEmotionHistByID //
 //////////////////////////////////////////////////////
 exports.getEmotionHist = async (req, res) => {
-  var userinfo = {};
   const { isloggedin, userid, role } = req.session;
-  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
 
-  if (isloggedin) {
-    const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
-    console.log(
-      `Logged in. Method: getEmotionHist | Calling endpoint: ${endpoint}`
-    );
-    await axios
-      .get(endpoint)
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data);
-        const username = data[0].name;
-        const userrole = data[0].role;
-        const session = req.session;
-        session.name = username;
-        session.role = userrole;
-        console.log(session);
-        userinfo = { name: username, role: userrole };
-        console.log(userinfo);
-      })
-      .catch((error) => {
-        console.log(`Error making API request: ${error}`);
-      });
+  if (!isloggedin) {
+    return res.render("index", { loggedin: false });
   }
 
-  const endpoint = `http://localhost:3002/emotionhistory`;
-  console.log(`Method: getEmotionHist | Calling endpoint: ${endpoint}`);
-  const urole = req.session.role;
-  console.log("Role:", urole);
-  await axios
-    .get(endpoint)
-    .then((response) => {
-      const data = response.data.result;
-      console.log(data[0]);
-      res.render("index", {
-        snapshot: data[0],
-        loggedin: isloggedin,
-        user: userinfo,
-        role: urole,
-      });
-    })
-    .catch((error) => {
-      console.log(`Error making API request: ${error}`);
+  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
+
+  const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
+  console.log(
+    `Logged in. Method: getEmotionHist | Calling endpoint: ${endpoint}`
+  );
+
+  try {
+    const response = await axios.get(endpoint);
+    const data = response.data.result;
+    console.log("data:", data);
+
+    const username = data[0].name;
+    const userrole = data[0].role;
+    req.session.name = username;
+    req.session.role = userrole;
+
+    console.log(req.session);
+
+    const emotionEndpoint = `http://localhost:3002/emotionhistory/?id=${userid}&role=${userrole}`;
+
+    const queryParams = {
+      inp_userid: userid,
+      inp_role: userrole,
+    };
+    console.log("queryParams:", queryParams);
+
+    const emotionResponse = await axios.get(emotionEndpoint, {
+      params: queryParams,
     });
+    console.log("emotionResponse:", emotionResponse);
+    const emotionData = emotionResponse.data.result;
+    console.log(emotionData[0]);
+
+    res.render("index", {
+      snapshot: emotionData[0],
+      loggedin: isloggedin,
+      user: { name: username, role: userrole },
+      role: userrole,
+    });
+  } catch (error) {
+    console.log(`Error making API request: ${error}`);
+  }
 };
 
 exports.getEmotionHistByID = async (req, res) => {
@@ -270,137 +272,6 @@ exports.getLogout = (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");
   });
-};
-
-/////////////////////////////////////
-// USER CALLS:                     //
-// GET ACCOUNT DETAILS - getUsers  //
-// CREATE ACCOUNT - postNewUser    //
-// UPDATE ACCOUNT - putUserDetails //
-// DELETE ACCOUNT - deleteUser     //
-/////////////////////////////////////
-exports.getUsers = async (req, res) => {
-  const { isloggedin, userid, role } = req.session;
-  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
-
-  if (isloggedin) {
-    const user_details = {
-      user_details: {
-        inp_userid: req.session.userid,
-        inp_role: req.session.role,
-      },
-    };
-    const endpoint = `http://localhost:3002/useradmin/users`;
-    console.log(`Logged in. Method: getUsers | Calling endpoint: ${endpoint}`);
-    console.log(`Parameters: user_details: ${user_details}`);
-
-    await axios
-      .get(endpoint, user_details)
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data[0]);
-        res.render("accountadmin", {
-          details: data[0],
-          loggedin: isloggedin,
-          role,
-        });
-      })
-      .catch((error) => {
-        console.log(`Error making API request: ${error}`);
-      });
-  } else {
-    console.log(`Not logged in: redirecting to home page.`);
-    res.redirect("/");
-  }
-};
-
-exports.postNewUser = async (req, res) => {
-  const user_details = {
-    user_details: {
-      inp_name: req.body.inp_name.trim(),
-      inp_firstname: req.body.inp_firstname.trim(),
-      inp_lastname: req.body.inp_lastname.trim(),
-      inp_email: req.body.inp_email.trim(),
-      inp_password: req.body.inp_password.trim(),
-      inp_typeid: 2,
-    },
-  };
-  const endpoint = `http://localhost:3002/useradmin/users/new`;
-  console.log(`Method: postNewUser | Calling endpoint: ${endpoint}`);
-  console.log(`Parameters: user_details: ${user_details}`);
-  await axios
-    .post(endpoint, user_details)
-    .then((response) => {
-      const data = response.data;
-      console.log(data);
-
-      res.render("login", {
-        popupMessage: data["message"],
-      });
-    })
-    .catch((error) => {
-      console.log(`Error making API request: ${error}`);
-    });
-};
-
-exports.putUserDetails = async (req, res) => {
-  const { isloggedin, userid, role } = req.session;
-  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
-
-  if (isloggedin) {
-    const user_details = {
-      user_details: {
-        inp_id: userid,
-        inp_name: req.body.inp_name.trim(),
-        inp_firstname: req.body.inp_firstname.trim(),
-        inp_lastname: req.body.inp_lastname.trim(),
-        inp_email: req.body.inp_email.trim(),
-        inp_password: req.body.inp_password,
-        inp_role: inp_role,
-      },
-    };
-    const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
-    console.log(`Method: postNewUser | Calling endpoint: ${endpoint}`);
-    console.log(`Parameters: userid: ${userid}`);
-    console.log(`Parameters: user_details: ${user_details}`);
-    await axios
-      .post(endpoint, user_details)
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-        res.redirect("/");
-      })
-      .catch((error) => {
-        console.log(`Error making API request: ${error}`);
-      });
-  } else {
-    console.log(`Not logged in: redirecting to home page.`);
-    res.redirect("/");
-  }
-};
-
-exports.deleteUser = async (req, res) => {
-  const { isloggedin, userid, role } = req.session;
-  console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
-
-  if (isloggedin) {
-    const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
-    console.log(`Method: postNewUser | Calling endpoint: ${endpoint}`);
-    console.log(`Parameters: userid: ${userid}`);
-    await axios
-      .post(endpoint)
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-        res.redirect("/");
-      })
-      .catch((error) => {
-        console.log(`Error making API request: ${error}`);
-      });
-  } else {
-    console.log(`Not logged in: redirecting to home page.`);
-    res.redirect("/");
-  }
 };
 
 ////////////////////////////////////

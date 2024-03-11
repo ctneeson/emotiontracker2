@@ -63,9 +63,10 @@
         <% if (loggedin) { %>
           <div class="uk-button uk-form-select" data-uk-form-select>
             <span>User:</span>
-            <select>
+            <select id="userDropdown">
               <% for (let row of details) { %>
-                <option value="<% row.name %>"><% row.name %></option>
+                <% console.log(row); %>
+                  <option value="<%= row.id %>"><%= row.name %></option>
               <% } %>
             </select>
           </div>
@@ -122,25 +123,18 @@
                 />
               </div>
               <div class="uk-width-1-2@s">
-                <input
-                  class="uk-input"
-                  name="userpass"
-                  type="password"
-                  placeholder="Password"
-                  uk-tooltip="title: Password (min. 3/max. 50 characters)"
-                  required
-                />
+                <input class="uk-input" id="userpass" name="userpass"
+                       type="password" placeholder="Password"
+                       uk-tooltip="title: Password (min. 3/max. 50 characters)"
+                       required/>
+                <input type="checkbox" id="togglePassword"> Show Password
               </div>
               <% if (role == 'administrator') { %>
                 <div class="uk-width-1-2@s">
-                <input
-                  class="uk-input"
-                  name="userrole"
-                  type="text"
-                  placeholder="Role"
-                  uk-tooltip="title: Role (User / Administrator)"
-                  required
-                />
+                  <select class="uk-select" name="userrole" required>
+                    <option value="user">User</option>
+                    <option value="administrator">Administrator</option>
+                  </select>
               </div>
               <% } %>
                 <div class="uk-width-1-4@s">
@@ -158,5 +152,53 @@
         </div>
       </div>
     </div>
+    <script>
+      // Get the password field and the checkbox
+      var passwordField = document.getElementById("userpass");
+      var togglePasswordCheckbox = document.getElementById("togglePassword");
+
+      // When the checkbox is clicked, update the type of the password field
+      togglePasswordCheckbox.addEventListener("click", function () {
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+        } else {
+          passwordField.type = "password";
+        }
+      });
+    </script>
+    <script>
+      // Create a JavaScript variable and assign the details array to it
+      var details = <%- JSON.stringify(details) %>;
+
+      // Function to update the input fields based on the selected user ID
+      function updateUserInputs(selectedUserId) {
+        // Find the corresponding user details based on the selected ID
+        var selectedUser = details.find(function(user) {
+          return user.id == selectedUserId;
+        });
+
+        // Update other input fields with the selected user details
+        document.getElementsByName('username')[0].value = selectedUser.name;
+        document.getElementsByName('email')[0].value = selectedUser.email;
+        document.getElementsByName('firstname')[0].value = selectedUser.firstname;
+        document.getElementsByName('lastname')[0].value = selectedUser.lastname;
+        document.getElementsByName('userpass')[0].value = selectedUser.password;
+        <% if (role == 'administrator') { %>
+          document.getElementsByName('userrole')[0].value = selectedUser.role;
+        <% } %>
+      }
+
+      // JavaScript to handle the change event of the dropdown
+      document.getElementById('userDropdown').addEventListener('change', function() {
+        // Get the selected option value
+        var selectedUserId = this.value;
+
+        // Update the input fields
+        updateUserInputs(selectedUserId);
+      });
+
+      // Call the function to update the input fields when the page loads
+      updateUserInputs(document.getElementById('userDropdown').value);
+    </script>
   </body>
 </html>
