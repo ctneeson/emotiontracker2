@@ -230,24 +230,32 @@ exports.putUserDetails = (req, res) => {
   console.log("Executing exports.putUserDetails...");
   const { userid } = req.params;
   console.log("req.params", req.params);
-  const { account_details } = req.body;
-  console.log("account_details", account_details);
+  console.log("req.body", req.body);
+  const {
+    inp_id,
+    inp_name,
+    inp_firstname,
+    inp_lastname,
+    inp_email,
+    inp_password,
+    inp_role,
+  } = req.body;
 
   const updateSQL =
     "CALL sp_updateUser(" +
-    mysql.escape(account_details.inp_id) +
+    mysql.escape(inp_id) +
     ", " +
-    mysql.escape(account_details.inp_name) +
+    mysql.escape(inp_name) +
     ", " +
-    mysql.escape(account_details.inp_firstname) +
+    mysql.escape(inp_firstname) +
     ", " +
-    mysql.escape(account_details.inp_lastname) +
+    mysql.escape(inp_lastname) +
     ", " +
-    mysql.escape(account_details.inp_email) +
+    mysql.escape(inp_email) +
     ", " +
-    mysql.escape(account_details.inp_password) +
+    mysql.escape(inp_password) +
     ", " +
-    mysql.escape(account_details.inp_role) +
+    mysql.escape(inp_role) +
     ", @upd_affectedRows" +
     ")";
 
@@ -264,12 +272,20 @@ exports.putUserDetails = (req, res) => {
         message: err,
       });
     } else {
-      if (rows.length > 0) {
-        var upd_affectedRows = rows[0][0]["@upd_affectedRows"];
+      var upd_affectedRows = rows[0][0].upd_affectedRows;
+      console.log("upd_affectedRows:", upd_affectedRows);
+      if (upd_affectedRows > 0) {
         res.status(200);
         res.json({
           status: "success",
           message: `${upd_affectedRows} record(s) updated`,
+          result: rows,
+        });
+      } else if (upd_affectedRows == 0) {
+        res.status(202);
+        res.json({
+          status: "success",
+          message: `Request processed, but ${upd_affectedRows} records updated`,
           result: rows,
         });
       } else {

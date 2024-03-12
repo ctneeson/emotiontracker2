@@ -67,25 +67,27 @@ exports.postNewUser = async (req, res) => {
 exports.putUserDetails = async (req, res) => {
   const { isloggedin, userid, role } = req.session;
   console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
+  const selectedUserId = req.params.id;
 
   if (isloggedin) {
     const user_details = {
       user_details: {
-        inp_id: userid,
+        inp_id: parseInt(req.body.inp_id),
         inp_name: req.body.inp_name.trim(),
         inp_firstname: req.body.inp_firstname.trim(),
         inp_lastname: req.body.inp_lastname.trim(),
         inp_email: req.body.inp_email.trim(),
-        inp_password: req.body.inp_password,
-        inp_role: inp_role,
+        inp_password: req.body.inp_password.trim(),
+        inp_role: req.body.inp_role,
       },
     };
-    const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
+    console.log("req.body:", req.body);
+    const endpoint = `http://localhost:3002/useradmin/users/${selectedUserId}`;
     console.log(`Method: putUserDetails | Calling endpoint: ${endpoint}`);
-    console.log(`Parameters: userid: ${userid}`);
+    console.log(`Parameters: selectedUserId: ${selectedUserId}`);
     console.log(`Parameters: user_details: ${user_details}`);
     await axios
-      .post(endpoint, user_details)
+      .put(endpoint, user_details)
       .then((response) => {
         const data = response.data;
         console.log(data);
