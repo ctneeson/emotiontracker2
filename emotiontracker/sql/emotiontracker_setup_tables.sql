@@ -144,11 +144,13 @@ ALTER TABLE `emotiontracker_users` ADD CONSTRAINT minlength_password CHECK (CHAR
 ALTER TABLE `emotiontracker_users` ADD CONSTRAINT `emotiontracker_users_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `emotiontracker_userstypes` (`type_id`);
 
 -- Truncate tables before repopulating
+SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE `emotiontracker_users`;
 TRUNCATE TABLE `emotiontracker_userstypes`;
 TRUNCATE TABLE `triggers`;
 TRUNCATE TABLE `emotionhistory`;
 TRUNCATE TABLE `emotion_triggers`;
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- Populate table `emotiontracker_userstypes`
 INSERT INTO `emotiontracker_userstypes` (`role`) VALUES
