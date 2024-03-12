@@ -40,39 +40,51 @@ BEGIN
   SET eh_affectedRows = ROW_COUNT();
 
   /* 2. After updating emotionhistory, delete any existing triggers that no longer apply from emotion_triggers table */
+  
+  -- Get the trigger ID from emotion_triggers for any 
   DROP TEMPORARY TABLE IF EXISTS temp_triggerids;
   
   CREATE TEMPORARY TABLE temp_triggerids
+  -- Get trigger IDs for any triggers currently attached to the snapshot ID (inp_ehid)
+  -- which aren't in the list of triggers (@inp_triggerlist) that we're updating the snapshot with
+  -- Any triggers previously added whihc are no longer present will be deleted
   SELECT DISTINCT et.trigger_id FROM emotion_triggers et
   WHERE et.ACTIVE = 1
   AND et.emotionhistory_id = inp_ehid
-  AND et.trigger_id NOT IN (SELECT trigger_id FROM triggers
-                            WHERE ACTIVE = 1
-                            AND description IN (SELECT TRIM(j.name)
-                                                FROM JSON_TABLE( replace(JSON_ARRAY(inp_triggerlist), ',', '","'), '$[*]' columns (name varchar(50) PATH '$') ) j
-                                               )
-                           );
+  AND et.trigger_id NOT IN
+   -- trigger IDs for already-present triggers in the list of values from @inp_triggerlist
+   (SELECT trigger_id FROM triggers
+    WHERE ACTIVE = 1
+    AND description IN (SELECT TRIM(j.name)
+                        FROM JSON_TABLE( replace(JSON_ARRAY(inp_triggerlist), ',', '","'), '$[*]' columns (name varchar(50) PATH '$') ) j
+                       )
+   );
   
+  -- Delete any links to triggers that are no longer applicable to the snapshot being updated
   DELETE FROM emotion_triggers
   WHERE emotionhistory_id = inp_ehid
   AND ACTIVE = 1
   AND trigger_id IN (SELECT trigger_id FROM temp_triggerids);
   SET tr_affectedRows_del = ROW_COUNT();
-
+  
+  -- Delete any triggers that are no longer attached to a snapshot that belongs to the user in question
+  DELETE FROM triggers
+  WHERE UPDATED_BY = inp_user
+  AND ACTIVE = 1
+  AND id NOT IN (SELECT trigger_id FROM emotion_triggers
+                 WHERE UPDATED_BY = inp_user
+				 AND ACTIVE = 1);
 
   /* 3. Insert any new triggers for the selected emotionhistory record into the triggers & emotion_triggers tables */
   DROP TABLE IF EXISTS temp_triggers;
   
-  -- Insert new descriptions into triggers table
+  -- Insert any new triggers in the input list (inp_triggerlist) that haven't already
+  -- been inserted in the triggers table by the existing user (UPDATED_BY = inp_user)
   CREATE TABLE temp_triggers
   SELECT TRIM(j.name) AS description, inp_user AS UPDATED_BY
   FROM JSON_TABLE( replace(JSON_ARRAY(inp_triggerlist), ',', '","'), '$[*]' columns (name varchar(50) PATH '$') ) j
-  WHERE TRIM(j.name) NOT IN (SELECT t.description FROM triggers t
-                             JOIN emotion_triggers et
-                              ON et.emotionhistory_id = inp_ehid
-                             AND t.id = et.trigger_id
-                             AND t.ACTIVE = 1
-                             AND et.ACTIVE = 1);
+  WHERE TRIM(j.name) NOT IN (SELECT description FROM triggers
+                             WHERE ACTIVE = 1 AND UPDATED_BY = inp_user);
 
   INSERT INTO triggers (description, UPDATED_BY)
   SELECT description, UPDATED_BY
@@ -88,13 +100,18 @@ BEGIN
    t.id AS trigger_id,
    inp_user AS UPDATED_BY
   FROM triggers t
-  JOIN temp_triggers tt
-   ON t.description = tt.description
+  JOIN ( SELECT TRIM(j.name) AS name
+         FROM JSON_TABLE( replace(JSON_ARRAY(inp_triggerlist), ',', '","'), '$[*]' columns (name varchar(50) PATH '$') ) j) tt
+   ON t.description = tt.name
   AND t.active = 1
   AND t.UPDATED_BY = inp_user;
 
   INSERT INTO emotion_triggers (emotionhistory_id, trigger_id, UPDATED_BY)
-  SELECT emotionhistory_id, trigger_id, UPDATED_BY FROM temp_emotiontriggers;
+  SELECT emotionhistory_id, trigger_id, UPDATED_BY FROM temp_emotiontriggers
+  WHERE trigger_id NOT IN (SELECT trigger_id FROM emotion_triggers
+                           WHERE emotionhistory_id = inp_ehid
+						   AND UPDATED_BY = inp_user
+						   AND ACTIVE = 1);
 					
  COMMIT;
  

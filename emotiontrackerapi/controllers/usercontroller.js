@@ -231,6 +231,8 @@ exports.putUserDetails = (req, res) => {
   const { userid } = req.params;
   console.log("req.params", req.params);
   console.log("req.body", req.body);
+  const { account_details } = req.body;
+  console.log("account_details", account_details);
   const {
     inp_id,
     inp_name,
@@ -239,7 +241,7 @@ exports.putUserDetails = (req, res) => {
     inp_email,
     inp_password,
     inp_role,
-  } = req.body;
+  } = account_details;
 
   const updateSQL =
     "CALL sp_updateUser(" +

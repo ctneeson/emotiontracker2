@@ -174,12 +174,12 @@
       document.getElementById("userDropdown").addEventListener("change", function () {
         var selectedUserId = this.value;
 
-        document.getElementById("updateForm").action = "http://localhost:3002/useradmin/users/" + selectedUserId;
+        document.getElementById("updateForm").action = "/useradmin/users/" + selectedUserId;
         updateUserInputs(selectedUserId);
       });
 
       var selectedUserId = document.getElementById("userDropdown").value;
-      document.getElementById("updateForm").action = "http://localhost:3002/useradmin/users/" + selectedUserId;
+      document.getElementById("updateForm").action = "/useradmin/users/" + selectedUserId;
       updateUserInputs(selectedUserId);
     </script>
     <!-- prettier-ignore -->
@@ -214,7 +214,7 @@
 
         // Make the PUT request
         $.ajax({
-          url: "http://localhost:3002/useradmin/users/" + selectedUserId,
+          url: "/useradmin/users/" + selectedUserId,
           type: "PUT",
           data: postData,
           success: function (data) {
