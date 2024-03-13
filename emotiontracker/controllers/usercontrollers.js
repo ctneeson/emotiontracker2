@@ -91,7 +91,11 @@ exports.putUserDetails = async (req, res) => {
       .then((response) => {
         const data = response.data;
         console.log(data);
-        res.redirect("/");
+        res.json({
+          redirectURL: `http://localhost:3000/useradmin/accountadmin?status=${
+            data.status
+          }&message=${encodeURIComponent(data.message)}`,
+        });
       })
       .catch((error) => {
         console.log(`Error making API request: ${error}`);

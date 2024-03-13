@@ -15,10 +15,8 @@ userRouter.get("/createaccount", (req, res) => {
 userRouter.get("/accountadmin", async (req, res) => {
   await userController.getUsers(req, res);
 });
-//userRouter.get("/useradmin/accountadmin", userController.getUsers);
-//userRouter.get("/useradmin/users", userController.getUsers);
-userRouter.post("/useradmin/users/new", userController.postNewUser);
+userRouter.post("/users/new", userController.postNewUser);
 userRouter.put("/users/:id", userController.putUserDetails);
-userRouter.delete("/useradmin/users/:id", userController.deleteUser);
+userRouter.delete("/users/:id", userController.deleteUser);
 
 module.exports = userRouter;
