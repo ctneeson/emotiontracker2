@@ -53,7 +53,7 @@ BEGIN
   AND et.emotionhistory_id = inp_ehid
   AND et.trigger_id NOT IN
    -- trigger IDs for already-present triggers in the list of values from @inp_triggerlist
-   (SELECT trigger_id FROM triggers
+   (SELECT id FROM triggers
     WHERE ACTIVE = 1
     AND description IN (SELECT TRIM(j.name)
                         FROM JSON_TABLE( replace(JSON_ARRAY(inp_triggerlist), ',', '","'), '$[*]' columns (name varchar(50) PATH '$') ) j
