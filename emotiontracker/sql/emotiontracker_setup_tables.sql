@@ -52,7 +52,7 @@ set @var=if( (SELECT true
 			  AND TABLE_NAME          = 'emotionhistory'
 			  AND CONSTRAINT_NAME     = 'fk_emotionhistory_emotiontrackerusers_updatedby'
 			  AND CONSTRAINT_TYPE     = 'FOREIGN KEY') = true,
-			 'ALTER TABLE emotion_triggers drop foreign key fk_emotionhistory_emotiontrackerusers_updatedby',
+			 'ALTER TABLE emotionhistory drop foreign key fk_emotionhistory_emotiontrackerusers_updatedby',
 			 'select 1');
 prepare stmt from @var;
 execute stmt;
@@ -64,7 +64,7 @@ set @var=if( (SELECT true
 			  AND TABLE_NAME          = 'triggers'
 			  AND CONSTRAINT_NAME     = 'fk_triggers_emotiontrackerusers_updatedby'
 			  AND CONSTRAINT_TYPE     = 'FOREIGN KEY') = true,
-			 'ALTER TABLE emotion_triggers drop foreign key fk_triggers_emotiontrackerusers_updatedby',
+			 'ALTER TABLE triggers drop foreign key fk_triggers_emotiontrackerusers_updatedby',
 			 'select 1');
 prepare stmt from @var;
 execute stmt;
@@ -160,7 +160,7 @@ INSERT INTO `emotiontracker_userstypes` (`role`) VALUES
 -- Populate table `emotiontracker_users`
 INSERT INTO `emotiontracker_users` (`name`, `firstname`, `lastname`, `email`, `password`, `type_id`) VALUES
 ('admin', 'Admini', 'Strator', 'admin@admin.com', 'admin123', 1),
-('ctn', 'Ciaran', 'Neeson', 'cneeson04@qub.ac.uk', 'ctn123', 2);
+('user', 'User', 'McUser', 'user@qub.ac.uk', 'user123', 2);
 
 -- Constraints for table `emotion_triggers`
 ALTER TABLE `emotion_triggers` ADD CONSTRAINT `fk_emotiontriggers_emotionhistory_id` FOREIGN KEY (`emotionhistory_id`) REFERENCES emotionhistory(`id`) ON DELETE CASCADE;
@@ -174,24 +174,24 @@ ALTER TABLE `emotionhistory` ADD CONSTRAINT `fk_emotionhistory_emotiontrackeruse
 ALTER TABLE `triggers` ADD CONSTRAINT `fk_triggers_emotiontrackerusers_updatedby` FOREIGN KEY (UPDATED_BY) REFERENCES `emotiontracker_users` (`name`);
 
 -- Populate triggers table
-INSERT INTO triggers(description, UPDATED_BY) VALUES('Work Stress', 'ctn');
-INSERT INTO triggers(description, UPDATED_BY) VALUES('Argument', 'ctn');
-INSERT INTO triggers(description, UPDATED_BY) VALUES('Phone Call', 'ctn');
-INSERT INTO triggers(description, UPDATED_BY) VALUES('Financial', 'ctn');
+INSERT INTO triggers(description, UPDATED_BY) VALUES('Work Stress', 'user');
+INSERT INTO triggers(description, UPDATED_BY) VALUES('Argument', 'user');
+INSERT INTO triggers(description, UPDATED_BY) VALUES('Phone Call', 'user');
+INSERT INTO triggers(description, UPDATED_BY) VALUES('Financial', 'user');
 
 -- Populate emotionhistory table
-INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(6, 8, 6, 2, 5, 5, 2, 'Notes - Work situation', 'ctn');
-INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(9, 8, 8, 1, 4, 4, 6, 'Notes - Argument', 'ctn');
-INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(3, 7, 7, 3, 3, 0, 2, 'Notes - Phone call', 'ctn');
-INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(0, 0, 0, 7, 1, 1, 1, 'Notes - Financial news', 'ctn');
-INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(5, 6, 7, 7, 6, 5, 6, 'Notes - No triggers', 'ctn');
+INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(6, 8, 6, 2, 5, 5, 2, 'Notes - Work situation', 'user');
+INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(9, 8, 8, 1, 4, 4, 6, 'Notes - Argument', 'user');
+INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(3, 7, 7, 3, 3, 0, 2, 'Notes - Phone call', 'user');
+INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(0, 0, 0, 7, 1, 1, 1, 'Notes - Financial news', 'user');
+INSERT INTO emotionhistory(level_anger, level_contempt, level_disgust, level_enjoyment, level_fear, level_sadness, level_surprise, notes, UPDATED_BY) VALUES(5, 6, 7, 7, 6, 5, 6, 'Notes - No triggers', 'user');
 
 -- Populate emotion_triggers table
-INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(1,1, 'ctn');
-INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(1,2, 'ctn');
-INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(2,2, 'ctn');
-INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(3,3, 'ctn');
-INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(4,4, 'ctn');
+INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(1,1, 'user');
+INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(1,2, 'user');
+INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(2,2, 'user');
+INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(3,3, 'user');
+INSERT INTO emotion_triggers(emotionhistory_id, trigger_id, UPDATED_BY) VALUES(4,4, 'user');
 
 COMMIT;
 
