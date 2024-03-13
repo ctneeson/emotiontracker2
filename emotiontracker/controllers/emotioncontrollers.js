@@ -31,8 +31,6 @@ exports.getEmotionHist = async (req, res) => {
     req.session.name = username;
     req.session.role = userrole;
 
-    console.log(req.session);
-
     const emotionEndpoint = `http://localhost:3002/emotionhistory/?id=${userid}&role=${userrole}`;
 
     const queryParams = {
@@ -44,9 +42,8 @@ exports.getEmotionHist = async (req, res) => {
     const emotionResponse = await axios.get(emotionEndpoint, {
       params: queryParams,
     });
-    console.log("emotionResponse:", emotionResponse);
     const emotionData = emotionResponse.data.result;
-    console.log(emotionData[0]);
+    console.log("emotionData[0]:", emotionData[0]);
 
     res.render("index", {
       snapshot: emotionData[0],
@@ -160,6 +157,7 @@ exports.updateEmotionHistByID = async (req, res) => {
     await axios
       .put(endpoint, snapshot_details)
       .then((response) => {
+        console.log("res:", res);
         console.log(response.data);
         res.redirect("/");
       })

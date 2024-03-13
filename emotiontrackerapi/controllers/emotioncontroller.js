@@ -185,7 +185,7 @@ exports.updateEmotionHistByID = async (req, res) => {
     mysql.escape(snapshot_details.inp_snapshotdate) +
     ", " +
     mysql.escape(snapshot_details.inp_user) +
-    ", @eh_affectedRows, @tr_affectedRows_ins, @tr_affectedRows_del" +
+    ", @eh_affectedRows, @et_affectedRows_ins, @et_affectedRows_del, @tr_affectedRows_ins, @tr_affectedRows_del" +
     ")";
 
   const logMessage = `Executing SQL: ${updateSQL.replace(/\?/g, (match) =>
@@ -198,16 +198,21 @@ exports.updateEmotionHistByID = async (req, res) => {
       .promise()
       .query({ sql: updateSQL, multipleStatements: true }, snapshot_details);
 
+    console.log("results:", results);
     const affectedRows = results[0][0];
-    console.log("affectedRows", affectedRows);
+    console.log("affectedRows:", affectedRows);
 
     const eh_affectedRows = affectedRows["@eh_affectedRows"];
+    const et_affectedRows_ins = affectedRows["@et_affectedRows_ins"];
+    const et_affectedRows_del = affectedRows["@et_affectedRows_del"];
     const tr_affectedRows_ins = affectedRows["@tr_affectedRows_ins"];
     const tr_affectedRows_del = affectedRows["@tr_affectedRows_del"];
 
     // Continue with the rest of your response logic
     if (
       eh_affectedRows > 0 ||
+      et_affectedRows_ins > 0 ||
+      et_affectedRows_del > 0 ||
       tr_affectedRows_ins > 0 ||
       tr_affectedRows_del > 0
     ) {
@@ -216,11 +221,15 @@ exports.updateEmotionHistByID = async (req, res) => {
         status: "success",
         message: `Snapshot ID ${id} updated`,
         eh_affectedRows,
+        et_affectedRows_ins,
+        et_affectedRows_del,
         tr_affectedRows_ins,
         tr_affectedRows_del,
       });
     } else if (
       eh_affectedRows == 0 &&
+      et_affectedRows_ins == 0 &&
+      et_affectedRows_del == 0 &&
       tr_affectedRows_ins == 0 &&
       tr_affectedRows_del == 0
     ) {
@@ -229,6 +238,8 @@ exports.updateEmotionHistByID = async (req, res) => {
         status: "success",
         message: `Request successful. No updates processed for Snapshot ID ${id}`,
         eh_affectedRows,
+        et_affectedRows_ins,
+        et_affectedRows_del,
         tr_affectedRows_ins,
         tr_affectedRows_del,
       });
@@ -238,6 +249,8 @@ exports.updateEmotionHistByID = async (req, res) => {
         status: "failure",
         message: `Invalid Snapshot ID ${id}`,
         eh_affectedRows,
+        et_affectedRows_ins,
+        et_affectedRows_del,
         tr_affectedRows_ins,
         tr_affectedRows_del,
       });
