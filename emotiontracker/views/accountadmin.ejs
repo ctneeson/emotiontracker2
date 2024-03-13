@@ -217,6 +217,9 @@
           url: "/useradmin/users/" + selectedUserId,
           type: "PUT",
           data: postData,
+          beforeSend: function(jqXHR, settings) {
+            console.log('About to send request:', settings);
+          },
           success: function (data) {
             console.log(data);
           },

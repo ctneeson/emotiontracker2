@@ -18,7 +18,7 @@ userRouter.get("/accountadmin", async (req, res) => {
 //userRouter.get("/useradmin/accountadmin", userController.getUsers);
 //userRouter.get("/useradmin/users", userController.getUsers);
 userRouter.post("/useradmin/users/new", userController.postNewUser);
-userRouter.put("/useradmin/users/:id", userController.putUserDetails);
+userRouter.put("/users/:id", userController.putUserDetails);
 userRouter.delete("/useradmin/users/:id", userController.deleteUser);
 
 module.exports = userRouter;

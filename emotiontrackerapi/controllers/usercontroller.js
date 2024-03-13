@@ -231,8 +231,8 @@ exports.putUserDetails = (req, res) => {
   const { userid } = req.params;
   console.log("req.params", req.params);
   console.log("req.body", req.body);
-  const { account_details } = req.body;
-  console.log("account_details", account_details);
+  const { user_details } = req.body;
+  console.log("user_details", user_details);
   const {
     inp_id,
     inp_name,
@@ -241,7 +241,7 @@ exports.putUserDetails = (req, res) => {
     inp_email,
     inp_password,
     inp_role,
-  } = account_details;
+  } = user_details;
 
   const updateSQL =
     "CALL sp_updateUser(" +
@@ -262,7 +262,7 @@ exports.putUserDetails = (req, res) => {
     ")";
 
   const logMessage = `Executing SQL: ${updateSQL.replace(/\?/g, (match) =>
-    conn.escape(account_details.shift())
+    conn.escape(user_details.shift())
   )}`;
   console.log(logMessage);
 
