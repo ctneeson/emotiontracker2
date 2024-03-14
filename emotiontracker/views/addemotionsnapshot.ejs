@@ -53,7 +53,9 @@
             item.textContent = value;
             menu.appendChild(item);
           });
-          $(dropdown).dropdown("refresh"); // Refresh Semantic UI dropdown
+          $(dropdown).dropdown({ // Refresh Semantic UI dropdown
+            allowAdditions: true
+          });
         }
         populateDropdown(); // Call the function to populate dropdown when the page loads
 
@@ -187,8 +189,7 @@
                   <input type="hidden" name="tags" />
                   <i class="dropdown icon"></i>
                   <div class="default text">Select triggers or enter new value</div>
-                  <div class="menu">
-                  </div>
+                  <div class="menu"></div>
                 </div>
               </div>
             </div>

@@ -198,26 +198,35 @@
     </script>
     <!-- prettier-ignore -->
     <script>
-      document.getElementById("updatedByDropdown").addEventListener("change", function() {
-        var selectedUser = this.value;
-        // Update the username in the heading
-        document.getElementById("usernameDisplay").textContent = `Emotion Snapshots for: ${selectedUser}`;
-        // TODO: Update the page with the filtered data
-      });
+      // Assume userRole is set somewhere in your code
+      var userRole = 'user'; // replace this with actual user role
+    
+      if (userRole === 'administrator') {
+        document.getElementById("updatedByDropdown").addEventListener("change", function() {
+          var selectedUser = this.value;
+          // Update the username in the heading
+          document.getElementById("usernameDisplay").textContent = `Emotion Snapshots for: ${selectedUser}`;
+          // TODO: Update the page with the filtered data
+        });
+      }
     </script>
     <!-- prettier-ignore -->
     <script>
-      document.getElementById("updatedByDropdown").addEventListener("change", function () {
-        var selectedUser = this.value;
-        var rows = document.querySelectorAll("[data-updated-by]");
-        rows.forEach((row) => {
-          if (row.getAttribute("data-updated-by") == selectedUser) {
-            row.style.display = "block";
-          } else {
-            row.style.display = "none";
-          }
+      var userRole = 'user'; // replace this with actual user role
+
+      if (userRole === 'administrator') {
+        document.getElementById("updatedByDropdown").addEventListener("change", function () {
+          var selectedUser = this.value;
+          var rows = document.querySelectorAll("[data-updated-by]");
+          rows.forEach((row) => {
+            if (row.getAttribute("data-updated-by") == selectedUser) {
+              row.style.display = "block";
+            } else {
+              row.style.display = "none";
+            }
+          });
         });
-      });
+      }
     </script>
   </body>
 </html>

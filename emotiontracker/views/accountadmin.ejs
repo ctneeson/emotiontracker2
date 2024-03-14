@@ -132,6 +132,20 @@
     </div>
     <!-- prettier-ignore -->
     <script>
+      function navigateToAddPage() {
+        <% if (typeof user !== 'undefined' && user && user.name) { %>
+          // Set the user.name in localStorage
+          localStorage.setItem("username", "<%= user.name %>");
+
+          // Navigate to the "/new" page
+          window.location.href = "/new";
+        <% } else { %>
+          console.log("User is undefined or does not have a name."); // or handle it as needed
+        <% } %>
+      }
+    </script>
+    <!-- prettier-ignore -->
+    <script>
       // Get the password field and the checkbox
       var passwordField = document.getElementById("userpass");
       var togglePasswordCheckbox = document.getElementById("togglePassword");
@@ -201,6 +215,41 @@
     
       // Attach the submit event handler to the form
       document.getElementById("updateForm").addEventListener("submit", handleFormSubmit);
+    </script>
+    <!-- Disable the Update Account button if no inputs have changed -->
+    <!-- prettier-ignore -->
+    <script>
+      // Get all input fields and the 'Update Account' button
+      var inputFields = document.querySelectorAll('#updateForm input, #updateForm select');
+      var updateButton = document.querySelector('.update-account-button');
+
+      // Function to create a delimited list of input values
+      function createInputList() {
+        var inputValues = [];
+        for (var i = 0; i < inputFields.length; i++) {
+          inputValues.push(inputFields[i].value);
+        }
+        return inputValues.join('|');
+      }
+    </script>
+    <!-- Use the createInputList function and the inputFields variable -->
+    <!-- prettier-ignore -->
+    <script>
+      // Create List 1 when the page is first loaded and when the user selection changes
+      var list1 = createInputList();
+      document
+        .getElementById("userDropdown")
+        .addEventListener("change", function () {
+          list1 = createInputList();
+        });
+
+      // Create List 2 and compare it with List 1 whenever an input value changes
+      inputFields.forEach(function (inputField) {
+        inputField.addEventListener("input", function () {
+          var list2 = createInputList();
+          updateButton.disabled = list1 === list2;
+        });
+      });
     </script>
     <!-- prettier-ignore -->
     <script>
@@ -284,35 +333,6 @@
     
       // Call the function to check the input fields after creating the initial list
       checkInputFields();
-    </script>
-    <!-- Disable the Update Account button if no inputs have changed -->
-    <!-- prettier-ignore -->
-    <script>
-      // Get all input fields and the 'Update Account' button
-      var inputFields = document.querySelectorAll('#updateForm input, #updateForm select');
-      var updateButton = document.querySelector('.update-account-button');
-      // Function to create a delimited list of input values
-      function createInputList() {
-        var inputValues = [];
-        for (var i = 0; i < inputFields.length; i++) {
-          inputValues.push(inputFields[i].value);
-        }
-        return inputValues.join('|');
-      }
-
-      // Create List 1 when the page is first loaded and when the user selection changes
-      var list1 = createInputList();
-      document.getElementById('userDropdown').addEventListener('change', function() {
-        list1 = createInputList();
-      });
-
-      // Create List 2 and compare it with List 1 whenever an input value changes
-      inputFields.forEach(function(inputField) {
-        inputField.addEventListener('input', function() {
-          var list2 = createInputList();
-          updateButton.disabled = (list1 === list2);
-        });
-      });
     </script>
   </body>
 </html>
