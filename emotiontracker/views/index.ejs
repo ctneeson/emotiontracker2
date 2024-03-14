@@ -59,21 +59,39 @@
       <!-- prettier-ignore -->
       <div class="uk-container">
         <% if (loggedin) { %>
-        <h2 class="uk-heading-small uk-heading-line uk-text-center">
-          <span> <%= `Emotion Snapshots for: ${user.name}`%> </span>
-        </h2>
+        <% var updatedByValues = [];
+           snapshot.forEach((row) => {
+            if (!updatedByValues.includes(row.UPDATED_BY)) {
+              updatedByValues.push(row.UPDATED_BY);
+            }
+          }); %>
+        <% if (role == 'administrator' && snapshot && snapshot.length > 0 && updatedByValues.length > 0) { %>
+          <span>User:</span>
+          <select id="updatedByDropdown">
+            <% updatedByValues.forEach((value) => { %>
+              <option value="<%= value %>"><%= value %></option>
+            <% }); %>
+          </select>
+          <h2 class="uk-heading-small uk-heading-line uk-text-center">
+            <span id="usernameDisplay"> <%= `Emotion Snapshots for: ${updatedByValues[0]}`%> </span>
+          </h2>
         <% } else { %>
+            <h2 class="uk-heading-small uk-heading-line uk-text-center">
+              <span id="usernameDisplay"> <%= `Emotion Snapshots for: ${user.name}`%> </span>
+            </h2>
+          <% } %>
+      <% } else { %>
         <h2 class="uk-heading-small uk-heading-line uk-text-center">
           <span>My Emotion Tracker</span>
         </h2>
-        <% } %>
+      <% } %>
     
         <% if (loggedin && snapshot && snapshot.length > 0) { %>
         <div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
           <% const dateformat = { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'numeric', minute:'numeric', second:'numeric', hour12: false }; %>
           <% snapshot.forEach((row) => { %>
             <% var snapshotid = row.id; %>
-            <div>
+            <div data-updated-by="<%= row.UPDATED_BY %>">
               <a href="/edit/<%= snapshotid %>" class="uk-display-block uk-card uk-card-body uk-card-default uk-link-toggle">
                 <% var rawdate = new Date(row.UPDATE_DATE); %>
                 <% var itemdate = new Intl.DateTimeFormat('en-GB', dateformat).format(rawdate); %>
@@ -91,6 +109,7 @@
         <% } %>
       </div>
     </div>
+    <!-- prettier-ignore -->
     <script>
       <% if (typeof snapshot !== 'undefined' && Array.isArray(snapshot) && snapshot.length > 0) { %>
         <% snapshot.forEach((row) => { %>
@@ -163,6 +182,7 @@
         console.log("No snapshots available."); // or handle it as needed
       <% } %>
     </script>
+    <!-- prettier-ignore -->
     <script>
       function navigateToAddPage() {
         <% if (typeof user !== 'undefined' && user && user.name) { %>
@@ -175,6 +195,29 @@
           console.log("User is undefined or does not have a name."); // or handle it as needed
         <% } %>
       }
+    </script>
+    <!-- prettier-ignore -->
+    <script>
+      document.getElementById("updatedByDropdown").addEventListener("change", function() {
+        var selectedUser = this.value;
+        // Update the username in the heading
+        document.getElementById("usernameDisplay").textContent = `Emotion Snapshots for: ${selectedUser}`;
+        // TODO: Update the page with the filtered data
+      });
+    </script>
+    <!-- prettier-ignore -->
+    <script>
+      document.getElementById("updatedByDropdown").addEventListener("change", function () {
+        var selectedUser = this.value;
+        var rows = document.querySelectorAll("[data-updated-by]");
+        rows.forEach((row) => {
+          if (row.getAttribute("data-updated-by") == selectedUser) {
+            row.style.display = "block";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      });
     </script>
   </body>
 </html>
