@@ -120,8 +120,7 @@
               <% } %>
               <div class="uk-width-1-4@s">
                 <div uk-form-custom>
-                  <button class="uk-button uk-button-primary uk-align-center update-account-button"
-                    style="width: 100%">
+                  <button class="uk-button uk-button-primary uk-align-center update-account-button" style="width: 100%" disabled>
                     Update Account
                   </button>
                 </div>
@@ -131,6 +130,7 @@
         </div>
       </div>
     </div>
+    <!-- prettier-ignore -->
     <script>
       // Get the password field and the checkbox
       var passwordField = document.getElementById("userpass");
@@ -143,54 +143,6 @@
           passwordField.type = "password";
         }
       });
-    </script>
-    <!-- prettier-ignore -->
-    <script>
-      // Create a JavaScript variable and assign the details array to it
-      var details = <%- JSON.stringify(details) %>;
-    
-      // Function to update the input fields based on the selected user ID
-      function updateUserInputs(selectedUserId) {
-        // Find the corresponding user details based on the selected ID
-        var selectedUser = details.find(function(user) {
-          return user.id == selectedUserId;
-        });
-    
-        // Update other input fields with the selected user details
-        document.getElementsByName('username')[0].value = selectedUser.name;
-        document.getElementsByName('email')[0].value = selectedUser.email;
-        document.getElementsByName('firstname')[0].value = selectedUser.firstname;
-        document.getElementsByName('lastname')[0].value = selectedUser.lastname;
-        document.getElementsByName('userpass')[0].value = selectedUser.password;
-        <% if (role == 'administrator') { %>
-          document.getElementsByName('userrole')[0].value = selectedUser.role;
-        <% } %>
-      }
-    
-      // JavaScript to handle the change event of the dropdown
-      document.getElementById('userDropdown').addEventListener('change', function() {
-        // Get the selected option value
-        var selectedUserId = this.value;
-    
-        // Update the input fields
-        updateUserInputs(selectedUserId);
-      });
-    
-      // Call the function to update the input fields when the page loads
-      updateUserInputs(document.getElementById('userDropdown').value);
-    </script>
-    <!-- prettier-ignore -->
-    <script>
-      document.getElementById("userDropdown").addEventListener("change", function () {
-        var selectedUserId = this.value;
-
-        document.getElementById("updateForm").action = "/useradmin/users/" + selectedUserId;
-        updateUserInputs(selectedUserId);
-      });
-
-      var selectedUserId = document.getElementById("userDropdown").value;
-      document.getElementById("updateForm").action = "/useradmin/users/" + selectedUserId;
-      updateUserInputs(selectedUserId);
     </script>
     <!-- prettier-ignore -->
     <script>
@@ -245,6 +197,118 @@
 
       // Attach the submit event handler to the form
       document.getElementById("updateForm").addEventListener("submit", handleFormSubmit);
+    </script>
+    <!-- prettier-ignore -->
+    <script>
+      // Create a JavaScript variable and assign the details array to it
+      var details = <%- JSON.stringify(details) %>;
+    
+      // Create an object to store the initial values of the input fields
+      var initialInputValues = {};
+    
+      // Function to update the input fields based on the selected user ID
+      function updateUserInputs(selectedUserId) {
+        return new Promise(function(resolve) {
+          // Find the corresponding user details based on the selected ID
+          var selectedUser = details.find(function(user) {
+            return user.id == selectedUserId;
+          });
+    
+          // Update other input fields with the selected user details
+          var usernameField = document.getElementsByName('username')[0];
+          usernameField.value = selectedUser.name;
+          initialInputValues['username'] = selectedUser.name;
+    
+          var emailField = document.getElementsByName('email')[0];
+          emailField.value = selectedUser.email;
+          initialInputValues['email'] = selectedUser.email;
+    
+          var firstnameField = document.getElementsByName('firstname')[0];
+          firstnameField.value = selectedUser.firstname;
+          initialInputValues['firstname'] = selectedUser.firstname;
+    
+          var lastnameField = document.getElementsByName('lastname')[0];
+          lastnameField.value = selectedUser.lastname;
+          initialInputValues['lastname'] = selectedUser.lastname;
+    
+          var passwordField = document.getElementsByName('userpass')[0];
+          passwordField.value = selectedUser.password;
+          initialInputValues['userpass'] = selectedUser.password;
+    
+          <% if (role == 'administrator') { %>
+            var roleField = document.getElementsByName('userrole')[0];
+            roleField.value = selectedUser.role;
+            initialInputValues['userrole'] = selectedUser.role;
+          <% } %>
+    
+          // Resolve the promise after the input fields have been updated
+          resolve();
+        });
+      }
+    
+      // Function to check if any input field has a different value
+      function checkInputFields() {
+        for (var i = 0; i < inputFields.length; i++) {
+          var inputName = inputFields[i].name;
+          if (inputFields[i].value !== initialInputValues[inputName]) {
+            // If any input field has a different value, enable the button and return
+            updateButton.disabled = false;
+            return;
+          }
+        }
+        // If none of the input fields have a different value, disable the button
+        updateButton.disabled = true;
+      }
+    
+      // JavaScript to handle the change event of the dropdown
+      document.getElementById('userDropdown').addEventListener('change', function() {
+        // Get the selected option value
+        var selectedUserId = this.value;
+    
+        // Update the input fields
+        updateUserInputs(selectedUserId).then(checkInputFields);
+      });
+    
+      // Call the function to update the input fields when the page loads
+      updateUserInputs(document.getElementById('userDropdown').value).then(checkInputFields);
+    
+      // Create List 1 when the page is first loaded and when the user selection changes
+      var list1 = createInputList();
+      document.getElementById('userDropdown').addEventListener('change', function() {
+        list1 = createInputList();
+      });
+    
+      // Call the function to check the input fields after creating the initial list
+      checkInputFields();
+    </script>
+    <!-- Disable the Update Account button if no inputs have changed -->
+    <!-- prettier-ignore -->
+    <script>
+      // Get all input fields and the 'Update Account' button
+      var inputFields = document.querySelectorAll('#updateForm input, #updateForm select');
+      var updateButton = document.querySelector('.update-account-button');
+      // Function to create a delimited list of input values
+      function createInputList() {
+        var inputValues = [];
+        for (var i = 0; i < inputFields.length; i++) {
+          inputValues.push(inputFields[i].value);
+        }
+        return inputValues.join('|');
+      }
+
+      // Create List 1 when the page is first loaded and when the user selection changes
+      var list1 = createInputList();
+      document.getElementById('userDropdown').addEventListener('change', function() {
+        list1 = createInputList();
+      });
+
+      // Create List 2 and compare it with List 1 whenever an input value changes
+      inputFields.forEach(function(inputField) {
+        inputField.addEventListener('input', function() {
+          var list2 = createInputList();
+          updateButton.disabled = (list1 === list2);
+        });
+      });
     </script>
   </body>
 </html>
