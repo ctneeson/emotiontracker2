@@ -96,7 +96,7 @@
                 <% var rawdate = new Date(row.UPDATE_DATE); %>
                 <% var itemdate = new Intl.DateTimeFormat('en-GB', dateformat).format(rawdate); %>
                 <h3 class="uk-card-title">
-                  <span class="uk-link-heading"><%= snapshotid + ': ' + itemdate %></span>
+                  <span class="uk-link-heading"><%= itemdate %></span>
                 </h3>
                 <canvas id="chartId-<%= snapshotid %>" aria-label="chart" height="90" width="150"></canvas>
                 <%= row.items %>

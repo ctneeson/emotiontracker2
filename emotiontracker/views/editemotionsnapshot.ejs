@@ -184,7 +184,7 @@
                   <span class="uk-label" id="emo-surprise"><%= details[0].level_surprise %></span>
                 </div>
               </div>
-              <div class="uk-container">
+              <div class="uk-container uk-margin-top">
                 <div class="label-input-container">
                   <div class="label-with-spacing">
                     <label for="trigger-details">Trigger Details:</label>
@@ -218,12 +218,10 @@
                   </div>
                 </div>
               </div>
-              <div class="uk-container">
+              <div class="uk-container uk-margin-top">
                 <div uk-form-custom>
-                  <button id="updateButton" class="uk-button uk-button-primary uk-button-large" formaction="/edit/<%= snapshotid %>">Update</button>
-                </div>
-                <div uk-form-custom>
-                  <button class="uk-button uk-button-danger uk-button-large" formaction="/del/<%= snapshotid %>">Delete</button>
+                  <button id="updateButton" class="uk-button uk-button-primary uk-button-large uk-margin-right" formaction="/edit/<%= snapshotid %>">Update</button>
+                  <button id="deleteButton" class="uk-button uk-button-danger uk-button-large" formaction="/del/<%= snapshotid %>">Delete</button>
                 </div>
               </div>
             </div>
@@ -398,7 +396,7 @@
     </script>
     <!--------------------->
     <!-- Update Snapshot -->
-    <!--------------------->
+    <!-- prettier-ignore -->
     <script>
       function handleUpdateButtonClick() {
         console.log("Executing handleUpdateButtonClick()");
@@ -485,7 +483,7 @@
     </script>
     <!---------------------------------------------------->
     <!-- Enable/Disable changes to date & range sliders -->
-    <!---------------------------------------------------->
+    <!-- prettier-ignore --------------------------------->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         var role = '<%= role %>';
@@ -501,6 +499,42 @@
         }
     
         toggleElements();
+      });
+    </script>
+    <!--------------------->
+    <!-- Delete Snapshot -->
+    <!-- prettier-ignore -->
+    <script>
+      $(document).ready(function() {
+        $('#deleteButton').on('click', function(e) {
+          e.preventDefault();
+    
+          UIkit.modal.confirm('Delete snapshot?').then(function() {
+            var snapshotid = '<%= snapshotid %>';
+    
+            var postData = {
+              inp_ehid: snapshotid,
+            };
+    
+            $.ajax({
+              url: '/del/' + snapshotid,
+              type: 'POST',
+              data: postData,
+              success: function(response) {
+                if (response.status === 'success') {
+                  alert('Snapshot deleted successfully');
+                  window.location.href = '/';
+                } else {
+                  alert('Error: ' + response.message);
+                }
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                alert('Error: ' + textStatus + ' ' + errorThrown);
+              }
+            });
+          }, function() {
+          });
+        });
       });
     </script>
   </body>

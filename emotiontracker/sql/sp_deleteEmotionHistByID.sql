@@ -16,9 +16,3 @@ BEGIN
 END$$
 
 DELIMITER ;
-
-
-
-/*
-CALL sp_deleteEmotionHistByID(4);
-*/
