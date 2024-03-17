@@ -16,6 +16,8 @@ CREATE PROCEDURE IF NOT EXISTS sp_updateEmotionHistByID(
    IN inp_snapshotdate DATETIME,
    IN inp_user VARCHAR(100),
    OUT eh_affectedRows INT,
+   OUT et_affectedRows_ins INT,
+   OUT et_affectedRows_del INT,
    OUT tr_affectedRows_ins INT,
    OUT tr_affectedRows_del INT
 )
@@ -65,7 +67,7 @@ BEGIN
   WHERE emotionhistory_id = inp_ehid
   AND ACTIVE = 1
   AND trigger_id IN (SELECT trigger_id FROM temp_triggerids);
-  SET tr_affectedRows_del = ROW_COUNT();
+  SET et_affectedRows_del = ROW_COUNT();
   
   -- Delete any triggers that are no longer attached to a snapshot that belongs to the user in question
   DELETE FROM triggers
@@ -74,6 +76,7 @@ BEGIN
   AND id NOT IN (SELECT trigger_id FROM emotion_triggers
                  WHERE UPDATED_BY = inp_user
 				 AND ACTIVE = 1);
+  SET tr_affectedRows_del = ROW_COUNT();
 
   /* 3. Insert any new triggers for the selected emotionhistory record into the triggers & emotion_triggers tables */
   DROP TABLE IF EXISTS temp_triggers;
@@ -112,11 +115,12 @@ BEGIN
                            WHERE emotionhistory_id = inp_ehid
 						   AND UPDATED_BY = inp_user
 						   AND ACTIVE = 1);
-					
+  SET et_affectedRows_ins = ROW_COUNT();
+
+ SELECT eh_affectedRows, et_affectedRows_del, et_affectedRows_ins, tr_affectedRows_del, tr_affectedRows_ins;
+
  COMMIT;
  
- SELECT @eh_affectedRows, @tr_affectedRows_ins, @tr_affectedRows_del;
-
 END$$
 
 DELIMITER ;

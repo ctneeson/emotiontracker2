@@ -269,7 +269,7 @@ exports.deleteEmotionHistByID = (req, res) => {
   console.log("Executing exports.deleteEmotionHistByID...");
   const run_id = req.params.id;
 
-  const deleteSQL = `CALL sp_deleteEmotionHistByID(${run_id})`;
+  const deleteSQL = `CALL sp_deleteEmotionHistByID(${run_id}, @del_affectedRows)`;
 
   conn.query(deleteSQL, (err, rows) => {
     console.log(res);
