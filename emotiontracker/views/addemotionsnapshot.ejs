@@ -47,11 +47,13 @@
           menu.innerHTML = ""; // Clear existing options
 
           triggerValues.forEach(function (value) { // Populate dropdown options from triggerValues array
-            const item = document.createElement("div");
-            item.classList.add("item");
-            item.setAttribute("data-value", value);
-            item.textContent = value;
-            menu.appendChild(item);
+            if (value.trim() !== '') { // Check if the value is not an empty string
+              const item = document.createElement("div");
+              item.classList.add("item");
+              item.setAttribute("data-value", value);
+              item.textContent = value;
+              menu.appendChild(item);
+            }
           });
           $(dropdown).dropdown({ // Refresh Semantic UI dropdown
             allowAdditions: true
@@ -410,6 +412,11 @@
 
         $.post('/new', postData, function (data) {
           console.log("data:",data);
+
+          UIkit.notification({
+            message: `${data.status.toUpperCase()}: ${data.message}`,
+            timeout: 5000,
+          });
         });
       }
       

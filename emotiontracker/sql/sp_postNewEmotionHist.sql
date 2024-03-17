@@ -33,9 +33,10 @@ BEGIN
 
  /*- Add any new triggers for current user -*/
  INSERT INTO triggers (description, UPDATED_BY)
- VALUES ( (SELECT TRIM(j.name) FROM JSON_TABLE( replace(JSON_ARRAY(inp_triggerlist),',','","'), '$[*]' columns (name varchar(50) PATH '$')) j
-           WHERE TRIM(j.name) NOT IN (SELECT description FROM temp_triggers)),
-          inp_user );
+ SELECT TRIM(j.name), u.UPDATED_BY
+ FROM JSON_TABLE( replace(JSON_ARRAY(inp_triggerlist),',','","'), '$[*]' columns (name varchar(50) PATH '$')) j
+ JOIN (SELECT inp_user AS UPDATED_BY) u ON 1=1
+ WHERE TRIM(j.name) NOT IN (SELECT description FROM temp_triggers);
  SET tr_affectedRows = ROW_COUNT();
 
  /*- Update emotion_triggers link table -*/

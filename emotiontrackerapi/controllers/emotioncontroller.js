@@ -118,6 +118,7 @@ exports.postNewEmotionHist = async (req, res) => {
     const tr_affectedRows = affectedRows["@tr_affectedRows"];
 
     // Continue with the rest of your response logic
+    console.log("res:", res);
     if (eh_affectedRows > 0 || tr_affectedRows > 0) {
       res.status(200);
       res.json({
