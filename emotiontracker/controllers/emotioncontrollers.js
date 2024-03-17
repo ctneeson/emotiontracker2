@@ -114,10 +114,17 @@ exports.postNewEmotionHist = async (req, res) => {
       .then((response) => {
         console.log("response.data:", response.data);
         console.log("response.data.status:", response.data.status);
-        res.render("index", { loggedin: true, user: "ctn" });
+        res.json({
+          status: response.data.status,
+          message: response.data.message,
+        });
       })
       .catch((error) => {
         console.log(`Error making API request: ${error}`);
+        res.json({
+          status: "error",
+          message: `Error making API request: ${error}`,
+        });
       });
   } else {
     console.log(`Not logged in: redirecting to home page.`);

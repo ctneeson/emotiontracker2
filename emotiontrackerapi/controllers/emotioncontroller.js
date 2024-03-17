@@ -114,22 +114,23 @@ exports.postNewEmotionHist = async (req, res) => {
     const affectedRows = results[0][0];
     console.log("affectedRows", affectedRows);
 
-    const eh_affectedRows = affectedRows["@eh_affectedRows"];
-    const tr_affectedRows = affectedRows["@tr_affectedRows"];
+    const eh_affectedRows = affectedRows.eh_affectedRows;
+    const tr_affectedRows = affectedRows.tr_affectedRows;
+    console.log("eh_affectedRows:", eh_affectedRows);
+    console.log("tr_affectedRows:", tr_affectedRows);
 
     // Continue with the rest of your response logic
-    console.log("res:", res);
     if (eh_affectedRows > 0 || tr_affectedRows > 0) {
-      res.status(200);
-      res.json({
+      console.log("Setting status code to 200");
+      res.status(200).json({
         status: "success",
         message: `New snapshot added successfully`,
         eh_affectedRows,
         tr_affectedRows,
       });
     } else {
-      res.status(404);
-      res.json({
+      console.log("Setting status code to 404");
+      res.status(404).json({
         status: "failure",
         message: `New snapshot insertion failed`,
         eh_affectedRows,
@@ -271,8 +272,10 @@ exports.deleteEmotionHistByID = (req, res) => {
 
   const deleteSQL = `CALL sp_deleteEmotionHistByID(${run_id}, @del_affectedRows)`;
 
+  const logMessage = `Executing SQL: ${deleteSQL}`;
+  console.log(logMessage);
+
   conn.query(deleteSQL, (err, rows) => {
-    console.log(res);
     if (err) {
       res.status(500);
       res.json({
