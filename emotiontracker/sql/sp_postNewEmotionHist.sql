@@ -64,7 +64,7 @@ BEGIN
 
  COMMIT;
  
- SELECT @eh_affectedRows, @tr_affectedRows;
+ SELECT eh_affectedRows, tr_affectedRows;
 
 END$$
 
