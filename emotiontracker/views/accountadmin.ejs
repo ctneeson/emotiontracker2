@@ -15,13 +15,15 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- Alert message from URL -->
     <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      const status = urlParams.get('status');
-      const message = urlParams.get('message');
-
-      if (status && message) {
-        alert(`Status: ${status}\nMessage: ${message}`);
-      }
+      document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        const message = urlParams.get('message');
+    
+        if (status && message) {
+          UIkit.modal.alert(`Status: ${status}\nMessage: ${message}`);
+        }
+      });
     </script>
   </head>
 

@@ -164,12 +164,18 @@ exports.updateEmotionHistByID = async (req, res) => {
     await axios
       .put(endpoint, snapshot_details)
       .then((response) => {
-        console.log("res:", res);
-        console.log(response.data);
-        res.redirect("/");
+        console.log("response.data:", response.data);
+        res.json({
+          status: response.data.status,
+          message: response.data.message,
+        });
       })
       .catch((error) => {
         console.log(`Error making API request: ${error}`);
+        res.json({
+          status: "error",
+          message: `Error making API request: ${error}`,
+        });
       });
   } else {
     console.log(`Not logged in: redirecting to home page.`);

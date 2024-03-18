@@ -476,6 +476,15 @@
     
         $.post('/edit/' + snapshotid, postData, function (data) {
           console.log(data);
+          if (data.status === "success") {
+            UIkit.modal.alert('Snapshot updated successfully').then(function () {
+              window.location.href = '/';
+            });
+          } else {
+            UIkit.modal.alert(`${data.status.toUpperCase()}: ${data.message}`).then(function () {
+              // Take no action - remain on the same page
+            });
+          }
         });
       }
     
@@ -522,30 +531,18 @@
               type: 'POST',
               data: postData,
               success: function(response) {
+                console.log("response.status:",response.status);
+                console.log("response:",response);
                 if (response.status === 'success') {
-                  UIkit.notification({
-                    message: 'Snapshot deleted successfully',
-                    status: 'success',
-                    pos: 'top-center',
-                    timeout: 5000
+                  UIkit.modal.alert('Snapshot deleted successfully').then(function() {
+                    window.location.href = '/';
                   });
-                  window.location.href = '/';
                 } else {
-                  UIkit.notification({
-                    message: 'Error: ' + response.message,
-                    status: 'danger',
-                    pos: 'top-center',
-                    timeout: 5000
-                  });
+                  UIkit.modal.alert('Error: ' + response.message);
                 }
               },
               error: function(jqXHR, textStatus, errorThrown) {
-                UIkit.notification({
-                  message: 'Error: ' + textStatus + ' ' + errorThrown,
-                  status: 'danger',
-                  pos: 'top-center',
-                  timeout: 5000
-                });
+                UIkit.modal.alert('Error: ' + textStatus + ' ' + errorThrown);
               }
             });
           }, function() {

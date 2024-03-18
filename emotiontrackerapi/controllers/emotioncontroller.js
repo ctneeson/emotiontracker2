@@ -200,15 +200,27 @@ exports.updateEmotionHistByID = async (req, res) => {
       .promise()
       .query({ sql: updateSQL, multipleStatements: true }, snapshot_details);
 
-    console.log("results:", results);
     const affectedRows = results[0][0];
-    console.log("affectedRows:", affectedRows);
-
-    const eh_affectedRows = affectedRows["@eh_affectedRows"];
-    const et_affectedRows_ins = affectedRows["@et_affectedRows_ins"];
-    const et_affectedRows_del = affectedRows["@et_affectedRows_del"];
-    const tr_affectedRows_ins = affectedRows["@tr_affectedRows_ins"];
-    const tr_affectedRows_del = affectedRows["@tr_affectedRows_del"];
+    const eh_affectedRows = affectedRows.eh_affectedRows;
+    const et_affectedRows_ins = affectedRows.et_affectedRows_ins;
+    const et_affectedRows_del = affectedRows.et_affectedRows_del;
+    const tr_affectedRows_ins = affectedRows.tr_affectedRows_ins;
+    const tr_affectedRows_del = affectedRows.tr_affectedRows_del;
+    console.log("emotionhistory:", eh_affectedRows, "row(s) updated");
+    console.log(
+      "emotion_triggers:",
+      et_affectedRows_ins,
+      "row(s) inserted;",
+      et_affectedRows_del,
+      "row(s) deleted"
+    );
+    console.log(
+      "triggers:",
+      tr_affectedRows_ins,
+      "row(s) inserted;",
+      tr_affectedRows_del,
+      "row(s) deleted"
+    );
 
     // Continue with the rest of your response logic
     if (

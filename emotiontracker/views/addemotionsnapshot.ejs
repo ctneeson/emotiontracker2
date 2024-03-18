@@ -411,23 +411,19 @@
         console.log("postData:", postData);
 
         $.post('/new', postData, function (data) {
-        console.log("data:",data);
+          console.log("data:",data);
 
-        if (data.status === "success") {
-          UIkit.modal.confirm('Snapshot added successfully. Would you like to add another?').then(function () {
-            location.reload();
-          }, function () {
-            location.href = "/";
-          });
-        } else {
-          UIkit.notification({
-            message: `${data.status.toUpperCase()}: ${data.message}`,
-            status: 'danger',
-            pos: 'top-center',
-            timeout: 5000
-          });
-        }
-      });
+          if (data.status === "success") {
+            UIkit.modal.confirm('Snapshot added successfully. Would you like to add another?').then(function () {
+              location.reload();
+            }, function () {
+              location.href = "/";
+            });
+          } else {
+            UIkit.modal.alert(`${data.status.toUpperCase()}: ${data.message}`).then(function () {
+            });
+          }
+        });
       }
       
       document.getElementById('addButton').addEventListener('click', handleAddButtonClick);

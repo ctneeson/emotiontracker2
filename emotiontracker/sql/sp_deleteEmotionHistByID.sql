@@ -43,7 +43,10 @@ BEGIN
                            WHERE ACTIVE = 1
 						   AND UPDATED_BY = inp_user);
   
-  DELETE FROM triggers WHERE id IN (SELECT trigger_id FROM temp_deltriggers);
+  DELETE FROM triggers
+  WHERE id IN (SELECT trigger_id FROM temp_deltriggers)
+  AND UPDATED_BY = inp_user
+  AND ACTIVE = 1;
   SET tr_delRows = ROW_COUNT();
 
  COMMIT;
