@@ -268,9 +268,11 @@ exports.updateEmotionHistByID = async (req, res) => {
 
 exports.deleteEmotionHistByID = (req, res) => {
   console.log("Executing exports.deleteEmotionHistByID...");
-  const run_id = req.params.id;
+  console.log("req.query:", req.query);
+  const snapshot_id = req.query.id;
+  const user = req.query.user;
 
-  const deleteSQL = `CALL sp_deleteEmotionHistByID(${run_id}, @del_affectedRows)`;
+  const deleteSQL = `CALL sp_deleteEmotionHistByID(${snapshot_id}, '${user}', @eh_delRows, @et_delRows, @tr_delRows)`;
 
   const logMessage = `Executing SQL: ${deleteSQL}`;
   console.log(logMessage);
@@ -283,17 +285,23 @@ exports.deleteEmotionHistByID = (req, res) => {
         message: err,
       });
     } else {
-      if (res.affectedRows > 0) {
+      const eh_delRows = rows[0][0].eh_delRows;
+      const et_delRows = rows[0][0].et_delRows;
+      const tr_delRows = rows[0][0].tr_delRows;
+      console.log("Rows deleted from emotionhistory:", eh_delRows);
+      console.log("Rows deleted from emotion_triggers:", et_delRows);
+      console.log("Rows deleted from triggers:", tr_delRows);
+      if (eh_delRows > 0) {
         res.status(200);
         res.json({
           status: "success",
-          message: `Record ID ${run_id} deleted`,
+          message: `Record ID ${snapshot_id} deleted`,
         });
       } else {
         res.status(404);
         res.json({
           status: "failure",
-          message: `Invalid ID ${run_id}`,
+          message: `Invalid ID ${snapshot_id}`,
         });
       }
     }

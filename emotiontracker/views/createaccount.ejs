@@ -16,12 +16,18 @@
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
   </head>
+  <!-- prettier-ignore -->
   <body>
     <div class="uk-section">
       <div class="uk-container">
         <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
           <div class="uk-navbar-left">
             <img src="/imgs/brain_icon.png" />
+          </div>
+          <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+              <li class="uk-active"><a href="/login">Login</a></li>
+            </ul>
           </div>
         </nav>
       </div>
@@ -41,54 +47,25 @@
           uk-grid
         >
           <div class="uk-width-1-2@s">
-            <input
-              class="uk-input"
-              name="username"
-              type="text"
-              placeholder="Username"
-              uk-tooltip="title: Please enter your chosen username (min. 3/max. 250 characters), or leave blank to use your email address as your login ID"
-              required
-            />
+            <input class="uk-input" name="username" type="text" placeholder="Username"
+              uk-tooltip="title: Please enter your chosen username (min. 3/max. 250 characters), or leave blank to use your email address as your login ID" required/>
           </div>
           <div class="uk-width-1-2@s">
-            <input
-              class="uk-input"
-              name="email"
-              type="text"
-              placeholder="Email Address"
-              uk-tooltip="title: Please enter a valid email address (min. 3/max. 250 characters)"
-              required
-            />
+            <input class="uk-input" name="email" type="text" placeholder="Email Address"
+              uk-tooltip="title: Please enter a valid email address (min. 3/max. 250 characters)" required/>
           </div>
           <div class="uk-width-1-2@s">
-            <input
-              class="uk-input"
-              name="firstname"
-              type="text"
-              placeholder="First Name"
-              uk-tooltip="title: Please enter your first name (optional - max. 100 characters)"
-              required
-            />
+            <input class="uk-input" name="firstname" type="text" placeholder="First Name"
+              uk-tooltip="title: Please enter your first name (optional - max. 100 characters)" required/>
           </div>
           <div class="uk-width-1-2@s">
-            <input
-              class="uk-input"
-              name="lastname"
-              type="text"
-              placeholder="Last Name"
-              uk-tooltip="title: Please enter your last name (optional - max. 100 characters)"
-              required
-            />
+            <input class="uk-input" name="lastname" type="text" placeholder="Last Name"
+              uk-tooltip="title: Please enter your last name (optional - max. 100 characters)" required/>
           </div>
           <div class="uk-width-1-2@s">
-            <input
-              class="uk-input"
-              name="userpass"
-              type="password"
-              placeholder="Password"
-              uk-tooltip="title: Please enter your chosen password (min. 3/max. 50 characters)"
-              required
-            />
+            <input class="uk-input" id="userpass" name="userpass" type="password" placeholder="Password"
+              uk-tooltip="title: Please enter your chosen password (min. 3/max. 50 characters)" required/>
+              <input type="checkbox" id="togglePassword"> Show Password
           </div>
           <div class="uk-width-1-4@s">
             <div uk-form-custom>
@@ -105,6 +82,22 @@
         </form>
       </div>
     </div>
+    <!------------------------>
+    <!-- Show-Hide Password -->
+    <!-- prettier-ignore ----->
+    <script>
+      // Get the password field and the checkbox
+      var passwordField = document.getElementById("userpass");
+      var togglePasswordCheckbox = document.getElementById("togglePassword");
+
+      togglePasswordCheckbox.addEventListener("click", function () {
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+        } else {
+          passwordField.type = "password";
+        }
+      });
+    </script>
     <!--------------------->
     <!-- Validate Inputs -->
     <!-- prettier-ignore -->

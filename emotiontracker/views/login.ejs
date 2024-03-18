@@ -14,6 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
   </head>
+  <!-- prettier-ignore -->
   <body>
     <div class="uk-section">
       <div class="uk-container">
@@ -41,24 +42,13 @@
         <% } %>
         <form method="post" action="/login" class="uk-grid-small" uk-grid>
           <div class="uk-width-1-2@s">
-            <input
-              class="uk-input"
-              name="username"
-              type="text"
-              placeholder="Username"
-              required
-            />
+            <input class="uk-input" name="username" type="text" placeholder="Username" required/>
           </div>
           <div class="uk-width-1-2@s">
-            <input
-              class="uk-input"
-              name="userpass"
-              type="password"
-              placeholder="Password"
-              required
-            />
+            <input class="uk-input" id="userpass" name="userpass" type="password" placeholder="Password" required/>
+            <input type="checkbox" id="togglePassword"> Show Password
           </div>
-          <div class="uk-width-1-4@s">
+          <div class="uk-width-1-4@s uk-flex uk-flex-left">
             <div uk-form-custom>
               <button class="uk-button uk-button-primary">Login</button>
             </div>
@@ -66,5 +56,21 @@
         </form>
       </div>
     </div>
+    <!------------------------>
+    <!-- Show-Hide Password -->
+    <!-- prettier-ignore ----->
+    <script>
+      // Get the password field and the checkbox
+      var passwordField = document.getElementById("userpass");
+      var togglePasswordCheckbox = document.getElementById("togglePassword");
+
+      togglePasswordCheckbox.addEventListener("click", function () {
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+        } else {
+          passwordField.type = "password";
+        }
+      });
+    </script>
   </body>
 </html>

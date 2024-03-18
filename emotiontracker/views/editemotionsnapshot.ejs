@@ -514,6 +514,7 @@
     
             var postData = {
               inp_ehid: snapshotid,
+              inp_user: '<%= snapshotuser %>',
             };
     
             $.ajax({
@@ -522,14 +523,29 @@
               data: postData,
               success: function(response) {
                 if (response.status === 'success') {
-                  alert('Snapshot deleted successfully');
+                  UIkit.notification({
+                    message: 'Snapshot deleted successfully',
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 5000
+                  });
                   window.location.href = '/';
                 } else {
-                  alert('Error: ' + response.message);
+                  UIkit.notification({
+                    message: 'Error: ' + response.message,
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                  });
                 }
               },
               error: function(jqXHR, textStatus, errorThrown) {
-                alert('Error: ' + textStatus + ' ' + errorThrown);
+                UIkit.notification({
+                  message: 'Error: ' + textStatus + ' ' + errorThrown,
+                  status: 'danger',
+                  pos: 'top-center',
+                  timeout: 5000
+                });
               }
             });
           }, function() {

@@ -183,19 +183,31 @@ exports.deleteEmotionHist = async (req, res) => {
   console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
 
   if (isloggedin) {
-    const snapshot_id = req.params.id;
-    const endpoint = `http://localhost:3002/emotionhistory/${snapshot_id}`;
+    console.log("req.params:", req.params);
+    console.log("req.body:", req.body);
+    const snapshot_id = req.body.inp_ehid;
+    console.log("snapshot_id:", snapshot_id);
+    const user = req.body.inp_user;
+    console.log("user:", user);
+    const endpoint = `http://localhost:3002/emotionhistory/?id=${snapshot_id}&user=${user}`;
     console.log(
       `Logged in. Method: deleteEmotionHist | Calling endpoint: ${endpoint}`
     );
     await axios
       .delete(endpoint)
       .then((response) => {
-        console.log(response.data);
-        res.redirect("/");
+        console.log("response.data:", response.data);
+        res.json({
+          status: response.data.status,
+          message: response.data.message,
+        });
       })
       .catch((error) => {
         console.log(`Error making API request: ${error}`);
+        res.json({
+          status: "error",
+          message: `Error making API request: ${error}`,
+        });
       });
   } else {
     console.log(`Not logged in: redirecting to home page.`);
