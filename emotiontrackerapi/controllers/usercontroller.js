@@ -317,7 +317,10 @@ exports.deleteUser = (req, res) => {
   }
 
   const deleteuserSQL =
-    "CALL sp_deleteUser(" + mysql.escape(username) + ", @del_rows" + ")";
+    "CALL sp_deleteUser(" +
+    mysql.escape(username) +
+    ", @u_delRows, @eh_delRows, @et_delRows, @tr_delRows" +
+    ")";
 
   const logMessage = `Executing SQL: ${deleteuserSQL.replace(/\?/g, (match) =>
     conn.escape(req.body.shift())
@@ -332,19 +335,26 @@ exports.deleteUser = (req, res) => {
         message: err,
       });
     } else {
-      if (rows.length > 0) {
-        var deletedRows = rows[0][0].del_rows;
+      var u_delRows = rows[0][0].u_delRows;
+      var eh_delRows = rows[0][0].eh_delRows;
+      var et_delRows = rows[0][0].et_delRows;
+      var tr_delRows = rows[0][0].tr_delRows;
+      console.log("Rows deleted from emotiontracker_users:", u_delRows);
+      console.log("Rows deleted from emotionhistory:", eh_delRows);
+      console.log("Rows deleted from emotion_triggers:", et_delRows);
+      console.log("Rows deleted from triggers:", tr_delRows);
+      if (u_delRows > 0) {
         res.status(200);
         res.json({
           status: "success",
-          message: `${deletedRows} record(s) deleted`,
+          message: `User: ${username} deleted from database.`,
           result: rows,
         });
       } else {
         res.status(401);
         res.json({
           status: "failure",
-          message: `Invalid user credentials`,
+          message: `User deletion failed for: ${username}. Please review details and try again.`,
         });
       }
     }

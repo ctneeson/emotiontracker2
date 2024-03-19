@@ -109,20 +109,28 @@ exports.putUserDetails = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const { isloggedin, userid, role } = req.session;
   console.log(`User: ${userid} | Role: ${role} | Logged in: ${isloggedin}`);
+  const username = req.params.name;
 
   if (isloggedin) {
-    const endpoint = `http://localhost:3002/useradmin/users/${userid}`;
+    const endpoint = `http://localhost:3002/useradmin/users/${username}`;
     console.log(`Method: deleteUser | Calling endpoint: ${endpoint}`);
-    console.log(`Parameters: userid: ${userid}`);
+
     await axios
       .post(endpoint)
       .then((response) => {
         const data = response.data;
         console.log(data);
-        res.redirect("/");
+        res.json({
+          status: response.data.status,
+          message: response.data.message,
+        });
       })
       .catch((error) => {
         console.log(`Error making API request: ${error}`);
+        res.json({
+          status: "error",
+          message: `Error making API request: ${error}`,
+        });
       });
   } else {
     console.log(`Not logged in: redirecting to home page.`);

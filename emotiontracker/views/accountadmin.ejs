@@ -120,12 +120,11 @@
                   </select>
               </div>
               <% } %>
-              <div class="uk-width-1-4@s">
-                <div uk-form-custom>
-                  <button class="uk-button uk-button-primary uk-align-center update-account-button" style="width: 100%" disabled>
-                    Update Account
-                  </button>
-                </div>
+              <div class="uk-width-1-2@s uk-margin-top">
+                <button class="uk-button uk-button-primary update-account-button uk-margin-right" disabled>Update Account</button>
+                <% if (role == 'administrator') { %>
+                <button class="uk-button uk-button-danger delete-account-button" type="button" disabled>Delete Account</button>
+                <% } %>
               </div>
             </form>
           </div>
@@ -335,6 +334,60 @@
     
       // Call the function to check the input fields after creating the initial list
       checkInputFields();
+    </script>
+    <!-------------------------------------->
+    <!-- Enable/Disabled 'Delete Account' -->
+    <!-- prettier-ignore ------------------->
+    <script>
+      var userDropdown = document.getElementById("userDropdown");
+      var deleteButton = document.querySelector(".delete-account-button");
+
+      userDropdown.addEventListener("change", function () {
+        var selectedUserName = this.selectedOptions[0].text;
+
+        deleteButton.disabled = !(
+          selectedUserName !== "admin" && selectedUserName !== "user"
+        );
+      });
+
+      userDropdown.dispatchEvent(new Event("change"));
+    </script>
+    <!------------------------->
+    <!-- Delete User Account -->
+    <!-- prettier-ignore ------>
+    <script>
+      var deleteButton = document.querySelector(".delete-account-button");
+
+      deleteButton.addEventListener("click", function () {
+        UIkit.modal.confirm("Continue with account deletion?").then(
+          function () {
+            var selectedUserName =
+              document.getElementById("userDropdown").selectedOptions[0].text;
+
+            $.ajax({
+              url: "/useradmin/users/" + selectedUserName,
+              type: "POST",
+              success: function (response) {
+                console.log("response.status:", response.status);
+                console.log("response:", response);
+                if (response.status === "success") {
+                  UIkit.modal.alert(response.message).then(function () {
+                    location.reload();
+                  });
+                } else {
+                  UIkit.modal.alert("Error: " + response.message);
+                }
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                UIkit.modal.alert("Error: " + textStatus + " " + errorThrown);
+              },
+            });
+          },
+          function () {
+            // User clicked 'Cancel', do nothing
+          }
+        );
+      });
     </script>
   </body>
 </html>

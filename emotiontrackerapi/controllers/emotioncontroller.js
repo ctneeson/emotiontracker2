@@ -119,7 +119,6 @@ exports.postNewEmotionHist = async (req, res) => {
     console.log("eh_affectedRows:", eh_affectedRows);
     console.log("tr_affectedRows:", tr_affectedRows);
 
-    // Continue with the rest of your response logic
     if (eh_affectedRows > 0 || tr_affectedRows > 0) {
       console.log("Setting status code to 200");
       res.status(200).json({
@@ -222,7 +221,6 @@ exports.updateEmotionHistByID = async (req, res) => {
       "row(s) deleted"
     );
 
-    // Continue with the rest of your response logic
     if (
       eh_affectedRows > 0 ||
       et_affectedRows_ins > 0 ||
@@ -320,9 +318,6 @@ exports.deleteEmotionHistByID = (req, res) => {
   });
 };
 
-//////////////
-// TRIGGERS //
-//////////////
 exports.getTriggers = (req, res) => {
   console.log("Executing exports.getTriggers...");
   const userid = req.params.id;
@@ -344,61 +339,6 @@ exports.getTriggers = (req, res) => {
         message: `${rows[0].length} record(s) retrieved`,
         result: rows[0][0],
       });
-    }
-  });
-};
-
-exports.postNewTrigger = (req, res) => {
-  console.log("Executing exports.postNewTrigger...");
-  const { new_details, new_date } = req.body;
-  const vals = [new_details, new_date];
-
-  const insertSQL = `INSERT INTO triggers (description) VALUES (?)`;
-
-  conn.query(insertSQL, vals, (err, rows) => {
-    if (err) {
-      res.status(500);
-      res.json({
-        status: "failure",
-        message: err,
-      });
-    } else {
-      res.status(201);
-      res.json({
-        status: "success",
-        message: `Record ID ${rows.insertId} added to triggers`,
-      });
-    }
-  });
-};
-
-exports.deleteTrigger = (req, res) => {
-  console.log("Executing exports.deleteTrigger...");
-  const run_id = req.params.id;
-
-  const deleteSQL = `DELETE FROM triggers WHERE id = ${run_id}`;
-
-  conn.query(deleteSQL, (err, rows) => {
-    if (err) {
-      res.status(500);
-      res.json({
-        status: "failure",
-        message: err,
-      });
-    } else {
-      if (rows.affectedRows > 0) {
-        res.status(200);
-        res.json({
-          status: "success",
-          message: `Record ID ${run_id} deleted`,
-        });
-      } else {
-        res.status(404);
-        res.json({
-          status: "failure",
-          message: `Invalid ID ${run_id}`,
-        });
-      }
     }
   });
 };

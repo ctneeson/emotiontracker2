@@ -109,6 +109,19 @@
         <% } %>
       </div>
     </div>
+    <!---------------------------->
+    <!-- Update usernameDisplay -->
+    <!-- prettier-ignore --------->
+    <script>
+      var updatedByDropdown = document.getElementById("updatedByDropdown");
+      var usernameDisplay = document.getElementById("usernameDisplay");
+
+      usernameDisplay.textContent = `Emotion Snapshots for: ${updatedByDropdown.value}`;
+
+      updatedByDropdown.addEventListener("change", function () {
+        usernameDisplay.textContent = `Emotion Snapshots for: ${this.value}`;
+      });
+    </script>
     <!-- prettier-ignore -->
     <script>
       <% if (typeof snapshot !== 'undefined' && Array.isArray(snapshot) && snapshot.length > 0) { %>
@@ -198,17 +211,23 @@
     </script>
     <!-- prettier-ignore -->
     <script>
-      // Assume userRole is set somewhere in your code
-      var userRole = 'user'; // replace this with actual user role
+      <% if (typeof role !== 'undefined') { %>
+        var userRole = '<%= role %>'; // replace this with actual user role
     
-      if (userRole === 'administrator') {
-        document.getElementById("updatedByDropdown").addEventListener("change", function() {
-          var selectedUser = this.value;
-          // Update the username in the heading
-          document.getElementById("usernameDisplay").textContent = `Emotion Snapshots for: ${selectedUser}`;
-          // TODO: Update the page with the filtered data
-        });
-      }
+        if (userRole === 'administrator') {
+          document.getElementById("updatedByDropdown").addEventListener("change", function () {
+            var selectedUser = this.value;
+            var rows = document.querySelectorAll("[data-updated-by]");
+            rows.forEach((row) => {
+              if (row.getAttribute("data-updated-by") == selectedUser) {
+                row.style.display = "block";
+              } else {
+                row.style.display = "none";
+              }
+            });
+          });
+        }
+      <% } %>
     </script>
     <!-- prettier-ignore -->
     <script>
