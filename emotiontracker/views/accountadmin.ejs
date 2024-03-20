@@ -13,6 +13,11 @@
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- sessionUserName -->
+    <script>
+      var sessionUserName = "<%= userName %>";
+      console.log("sessionUserName:",sessionUserName);
+    </script>
     <!-- Alert message from URL -->
     <script>
       document.addEventListener("DOMContentLoaded", function() {
@@ -134,15 +139,11 @@
     <!-- prettier-ignore -->
     <script>
       function navigateToAddPage() {
-        <% if (typeof user !== 'undefined' && user && user.name) { %>
-          // Set the user.name in localStorage
-          localStorage.setItem("username", "<%= user.name %>");
-
-          // Navigate to the "/new" page
+        if (sessionUserName) {
           window.location.href = "/new";
-        <% } else { %>
+        } else {
           console.log("User is undefined or does not have a name."); // or handle it as needed
-        <% } %>
+        }
       }
     </script>
     <!-- prettier-ignore -->
@@ -335,9 +336,9 @@
       // Call the function to check the input fields after creating the initial list
       checkInputFields();
     </script>
-    <!-------------------------------------->
-    <!-- Enable/Disabled 'Delete Account' -->
-    <!-- prettier-ignore ------------------->
+    <!------------------------------------->
+    <!-- Enable/Disable 'Delete Account' -->
+    <!-- prettier-ignore ------------------>
     <script>
       var userDropdown = document.getElementById("userDropdown");
       var deleteButton = document.querySelector(".delete-account-button");
@@ -345,9 +346,11 @@
       userDropdown.addEventListener("change", function () {
         var selectedUserName = this.selectedOptions[0].text;
 
+        <% if (role == 'administrator') { %>
         deleteButton.disabled = !(
           selectedUserName !== "admin" && selectedUserName !== "user"
         );
+        <% } %>
       });
 
       userDropdown.dispatchEvent(new Event("change"));
@@ -356,6 +359,7 @@
     <!-- Delete User Account -->
     <!-- prettier-ignore ------>
     <script>
+      <% if (role == 'administrator') { %>
       var deleteButton = document.querySelector(".delete-account-button");
 
       deleteButton.addEventListener("click", function () {
@@ -388,6 +392,7 @@
           }
         );
       });
+      <% } %>
     </script>
   </body>
 </html>

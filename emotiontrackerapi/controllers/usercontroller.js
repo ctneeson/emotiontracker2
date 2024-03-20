@@ -11,8 +11,6 @@ const mysql = require("mysql2");
 // DELETE ACCOUNT - deleteUser       //
 ///////////////////////////////////////
 
-// Called from http://localhost:3000/login
-// Validates user ID & password combination to allow login
 exports.postLogin = (req, res) => {
   console.log("Executing exports.postLogin...");
   const { username, userpass } = req.body;
@@ -29,9 +27,12 @@ exports.postLogin = (req, res) => {
     return;
   }
 
-  const checkuserSQL = `SELECT id FROM emotiontracker_users
-                        WHERE emotiontracker_users.name = '${username}' 
-                        AND emotiontracker_users.password = '${userpass}'`;
+  const checkuserSQL =
+    "CALL sp_getUserPostLogin(" +
+    mysql.escape(username) +
+    ", " +
+    mysql.escape(userpass) +
+    ")";
 
   console.log("Executing SQL:", checkuserSQL);
   conn.query(checkuserSQL, vals, (err, rows) => {
@@ -42,11 +43,11 @@ exports.postLogin = (req, res) => {
         message: err,
       });
     } else {
-      if (rows.length > 0) {
+      if (rows[0].length > 0) {
         res.status(200);
         res.json({
           status: "success",
-          message: `${rows.length} records retrieved`,
+          message: `${rows[0].length} record(s) retrieved`,
           result: rows,
         });
       } else {
@@ -60,8 +61,6 @@ exports.postLogin = (req, res) => {
   });
 };
 
-// Called from http://localhost:3000/accountadmin
-// Returns user details based on role ('administrator': all users / 'user': individual user)
 exports.getUsers = (req, res) => {
   console.log("Executing exports.getUsers...");
   console.log("req.query:", req.query);
@@ -80,7 +79,8 @@ exports.getUsers = (req, res) => {
     return;
   }
 
-  const selectSQL = `CALL sp_getUsers(${uid}, "${urole}")`;
+  const selectSQL =
+    "CALL sp_getUsers(" + mysql.escape(uid) + ", " + mysql.escape(urole) + ")";
 
   const logMessage = `Executing SQL: ${selectSQL}`;
   console.log(logMessage);
@@ -118,11 +118,13 @@ exports.getUserDetails = (req, res) => {
     return;
   }
 
-  const getuserSQL = `SELECT emotiontracker_users.name, emotiontracker_userstypes.role 
-                      FROM emotiontracker_users
-                      INNER JOIN emotiontracker_userstypes
-                       ON emotiontracker_users.type_id = emotiontracker_userstypes.type_id
-                      WHERE emotiontracker_users.id = '${id}'`;
+  const getuserSQL =
+    "SELECT emotiontracker_users.name, emotiontracker_userstypes.role " +
+    "FROM emotiontracker_users INNER JOIN emotiontracker_userstypes " +
+    "ON emotiontracker_users.type_id = emotiontracker_userstypes.type_id " +
+    "WHERE emotiontracker_users.id = " +
+    mysql.escape(id) +
+    ";";
 
   console.log("Executing SQL:", getuserSQL);
   conn.query(getuserSQL, (err, rows) => {

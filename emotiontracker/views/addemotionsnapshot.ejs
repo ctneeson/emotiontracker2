@@ -24,13 +24,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
     <!-- Chart JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-
+    <!-- sessionUserName -->
+    <script>
+      var sessionUserName = "<%= userName %>";
+      console.log("sessionUserName:",sessionUserName);
+    </script>
     <!-- EventListener script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
 
         // 1. GET USER NAME
-        const username = localStorage.getItem("username");
+        const username = "<%= locals.sessionUserName %>";
         if (username) {
           console.log("Username:", username);
           window.username = username;
