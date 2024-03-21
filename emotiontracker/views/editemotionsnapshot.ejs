@@ -10,10 +10,7 @@
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- sessionUserName -->
-    <script>
-      var sessionUserName = "<%= userName %>";
-      console.log("sessionUserName:",sessionUserName);
-    </script>
+    <script src="./scripts/sessionUserName.js"></script>
     <!-- Semantic UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <style>
@@ -33,9 +30,9 @@
     <script>
       $(document).ready(function () {
         function initializeDropdown(initialTriggers, allTriggers) {
-          var initialValues = initialTriggers.split(",").map(function (trigger) {
+          var initialValues = initialTriggers ? initialTriggers.split(",").map(function (trigger) {
             return trigger.trim();
-          });
+          }) : [];
 
           var allValues = allTriggers.split(",").map(function (trigger) {
             return trigger.trim();
@@ -244,9 +241,7 @@
       </div>
     </div>
     
-    <!------------------->
-    <!-- Range Sliders -->
-    <!------------------->
+    <!-- Data Inputs -->
     <script>
       function increaseValue(emotion) {
         var slider = document.getElementById(emotion);
@@ -424,8 +419,8 @@
         "<%= details[0].level_sadness %>" + '|' +
         "<%= details[0].level_surprise %>" + '|' +
         "<%= inputdate %>" + '|' +
-        "<%= details[0].notes.trim() %>" + '|' +
-        "<%= details[0].triggers.replace(', ', ',') %>";
+        "<%= (details[0].notes || '').trim() %>" + '|';
+        "<%= (details[0].triggers || '').replace(', ', ',') %>";
 
         function getCurrentValues() {
           var currentInputValues =

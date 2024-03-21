@@ -36,30 +36,48 @@ BEGIN
 
  START TRANSACTION;
  
- INSERT INTO emotiontracker_users (name, firstname, lastname, email, password, type_id) VALUES (inp_name, inp_firstname, inp_lastname, inp_email, inp_password, inp_typeid);
+ DROP TEMPORARY TABLE IF EXISTS temp_userenc;
+
+ CREATE TEMPORARY TABLE temp_userenc
+ SELECT inp_name AS name, LEFT(UUID(),8) AS salt, LEFT(UUID(),50) AS aes_key;
+ 
+ INSERT INTO emotiontracker_users (name, firstname, lastname, email, password, type_id)
+ SELECT inp_name,
+        inp_firstname,
+		inp_lastname,
+		inp_email,
+        AES_ENCRYPT(CONCAT(inp_name, inp_password, ue.salt), ue.aes_key),
+		inp_typeid
+ FROM temp_userenc ue;
  SELECT ROW_COUNT() AS ins_rows;
 
  -- Create salt for new user and update password to encrypt it
  INSERT INTO `emotiontracker_userauth`
- SELECT id, LEFT(UUID(),8) FROM emotiontracker_users
- WHERE name = inp_name;
- 
- DROP TEMPORARY TABLE IF EXISTS temp_userauth;
-
- CREATE TEMPORARY TABLE temp_userauth
- SELECT u.id, SHA2(CONCAT(u.name, u.password, ua.salt),256) AS pass
+ SELECT u.id, ue.salt, ue.aes_key
  FROM emotiontracker_users u
- JOIN emotiontracker_userauth ua
- ON u.id = ua.id
- AND u.name = inp_name;
+ JOIN temp_userenc ue
+  ON u.name = ue.name
+ WHERE u.name = inp_name;
  
- UPDATE emotiontracker_users u
- INNER JOIN temp_userauth tua
- ON u.id = tua.id
- AND u.name = inp_name
- SET u.password = tua.pass;
+ DROP TEMPORARY TABLE IF EXISTS temp_userenc;
+ -- DROP TEMPORARY TABLE IF EXISTS temp_userauth;
+
+ -- CREATE TEMPORARY TABLE temp_userauth
+ -- SELECT u.id,
+ --  AES_ENCRYPT(CONCAT(u.name, u.password, ua.salt),ua.aes_key) AS pass
+ -- SHA2(CONCAT(u.name, u.password, ua.salt),256) AS pass
+ -- FROM emotiontracker_users u
+ -- JOIN emotiontracker_userauth ua
+ -- ON u.id = ua.id
+ -- AND u.name = inp_name;
  
- DROP TEMPORARY TABLE IF EXISTS temp_userauth;
+ -- UPDATE emotiontracker_users u
+ -- INNER JOIN temp_userauth tua
+ -- ON u.id = tua.id
+ -- AND u.name = inp_name
+ -- SET u.password = tua.pass;
+ 
+ -- DROP TEMPORARY TABLE IF EXISTS temp_userauth;
 
  COMMIT;
  

@@ -41,6 +41,8 @@ BEGIN
      SET ERR_MESSAGE = 'Invalid input provided: emotion levels, snapshot date and user must not be null.', ERR_IND = 1;
  ELSEIF (SELECT COUNT(id) FROM emotionhistory WHERE id = inp_ehid) = 0 THEN
      SET ERR_MESSAGE = 'Invalid snapshot ID provided', ERR_IND = 1;
+ ELSEIF (inp_user NOT IN (SELECT name FROM emotiontracker_users)) THEN
+     SET ERR_MESSAGE = 'Invalid user name provided.', ERR_IND = 1;
  ELSEIF (inp_snapshotdate > NOW()) THEN
      SET ERR_MESSAGE = 'Invalid snapshot date: cannot be in the future', ERR_IND = 1;
  ELSEIF (inp_anger        < 0 OR inp_anger     > 10
@@ -50,8 +52,33 @@ BEGIN
          OR inp_fear      < 0 OR inp_fear      > 10
          OR inp_sadness   < 0 OR inp_sadness   > 10
          OR inp_surprise  < 0 OR inp_surprise  > 10
-		 ) = 0 THEN
+		 ) THEN
      SET ERR_MESSAGE = 'Invalid snapshot value(s).', ERR_IND = 1;
+ ELSEIF (inp_anger = (SELECT level_anger FROM emotionhistory WHERE id = inp_ehid)
+         AND inp_anger        = (SELECT level_anger     FROM emotionhistory WHERE id = inp_ehid)
+         AND inp_contempt     = (SELECT level_contempt  FROM emotionhistory WHERE id = inp_ehid)
+         AND inp_disgust      = (SELECT level_disgust   FROM emotionhistory WHERE id = inp_ehid)
+         AND inp_enjoyment    = (SELECT level_enjoyment FROM emotionhistory WHERE id = inp_ehid)
+         AND inp_fear         = (SELECT level_fear      FROM emotionhistory WHERE id = inp_ehid)
+         AND inp_sadness      = (SELECT level_sadness   FROM emotionhistory WHERE id = inp_ehid)
+         AND inp_surprise     = (SELECT level_surprise  FROM emotionhistory WHERE id = inp_ehid)
+         AND inp_snapshotdate = (SELECT INSERT_DATE     FROM emotionhistory WHERE id = inp_ehid)
+         AND TRIM(inp_notes)  = (SELECT TRIM(notes)     FROM emotionhistory WHERE id = inp_ehid)
+		 AND (SELECT GROUP_CONCAT(DISTINCT a.name ORDER BY a.name ASC SEPARATOR ",")
+              FROM (SELECT TRIM(j.name) AS name
+                    FROM JSON_TABLE( replace(JSON_ARRAY(inp_triggerlist), ',', '","'), '$[*]'
+                                     columns (name varchar(50) PATH '$') ) j
+                   ) a)
+             = (SELECT GROUP_CONCAT(DISTINCT t.description ORDER BY t.description ASC SEPARATOR ",")
+                FROM triggers t
+                JOIN emotion_triggers et
+                ON et.emotionhistory_id = inp_ehid
+                AND t.id = et.trigger_id
+                AND t.UPDATED_BY = inp_user
+                AND t.ACTIVE = 1
+                AND et.ACTIVE = 1)
+		) THEN
+     SET ERR_MESSAGE = 'Update snapshot rejected. No changes exist in the input values.', ERR_IND = 1;
  END IF;
  
  IF ERR_IND = 1 THEN

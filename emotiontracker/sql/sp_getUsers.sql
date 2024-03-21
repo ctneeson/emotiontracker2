@@ -30,11 +30,17 @@ BEGIN
   u.firstname,
   u.lastname,
   u.email,
-  u.password,
+  LEFT(
+   (RIGHT(CAST(AES_DECRYPT(u.password, ua.aes_key) AS CHAR), (LENGTH(CAST(AES_DECRYPT(u.password, ua.aes_key) AS CHAR)) - LENGTH(u.name)))),
+   (LENGTH(RIGHT(CAST(AES_DECRYPT(u.password, ua.aes_key) AS CHAR), (LENGTH(CAST(AES_DECRYPT(u.password, ua.aes_key) AS CHAR)) - LENGTH(u.name)))) - LENGTH(ua.salt))
+  )
+  AS password,
   ut.role
  FROM emotiontracker_users u
- INNER JOIN emotiontracker_userstypes ut
+ JOIN emotiontracker_userstypes ut
   ON u.type_id = ut.type_id
+ JOIN emotiontracker_userauth ua
+  ON u.id = ua.id
  WHERE ( (inp_role = 'user' AND u.id = inp_userid) OR (inp_role = 'administrator') );
 
 END$$

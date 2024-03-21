@@ -27,12 +27,16 @@ BEGIN
  JOIN emotiontracker_userstypes ut
   ON u.type_id = ut.type_id
  WHERE u.name = inp_username
- AND u.password = SHA2(CONCAT(inp_username,
+ AND u.password = AES_ENCRYPT(CONCAT(inp_username,
+                                     inp_userpass,
+									(SELECT salt FROM emotiontracker_userauth WHERE id = (SELECT id FROM emotiontracker_users WHERE name = inp_username))),
+                             (SELECT aes_key FROM emotiontracker_userauth WHERE id = (SELECT id FROM emotiontracker_users WHERE name = inp_username)));
+/* AND u.password = SHA2(CONCAT(inp_username,
                               inp_userpass,
  							 (SELECT salt FROM emotiontracker_userauth
                                WHERE id = (SELECT id FROM emotiontracker_users
  							              WHERE name = inp_username)))
- 							, 256);
+ 							, 256);*/
 
 END$$
 

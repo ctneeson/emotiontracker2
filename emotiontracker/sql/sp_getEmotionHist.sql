@@ -1,6 +1,6 @@
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS sp_getEmotionHist$$
+DROP PROCEDURE IF EXISTS sp_getEmotionHist;
 
 CREATE PROCEDURE sp_getEmotionHist(
     IN inp_userid INT,

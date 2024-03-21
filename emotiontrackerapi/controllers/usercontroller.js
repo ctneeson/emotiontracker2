@@ -193,8 +193,7 @@ exports.postNewUser = async (req, res) => {
     mysql.escape(user_details.inp_password) +
     ", " +
     mysql.escape(user_details.inp_typeid) +
-    ", @ins_rows, @ERR_MESSAGE, @ERR_IND" +
-    ")";
+    ", @ins_rows, @ERR_MESSAGE, @ERR_IND)";
 
   const logMessage = `Executing SQL: ${insertSQL.replace(/\?/g, (match) =>
     conn.escape(user_details.shift())
@@ -265,8 +264,7 @@ exports.putUserDetails = (req, res) => {
     mysql.escape(inp_password) +
     ", " +
     mysql.escape(inp_role) +
-    ", @upd_affectedRows" +
-    ")";
+    ", @upd_affectedRows, @ERR_MESSAGE, @ERR_IND)";
 
   const logMessage = `Executing SQL: ${updateSQL.replace(/\?/g, (match) =>
     conn.escape(user_details.shift())
@@ -326,8 +324,7 @@ exports.deleteUser = (req, res) => {
   const deleteuserSQL =
     "CALL sp_deleteUser(" +
     mysql.escape(username) +
-    ", @u_delRows, @ua_delRows, @eh_delRows, @et_delRows, @tr_delRows, @ERR_MESSAGE, @ERR_IND" +
-    ")";
+    ", @u_delRows, @ua_delRows, @eh_delRows, @et_delRows, @tr_delRows, @ERR_MESSAGE, @ERR_IND)";
 
   const logMessage = `Executing SQL: ${deleteuserSQL.replace(/\?/g, (match) =>
     conn.escape(req.body.shift())
