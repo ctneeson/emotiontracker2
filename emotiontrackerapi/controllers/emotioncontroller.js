@@ -6,7 +6,12 @@ exports.getEmotionHist = (req, res) => {
   console.log("req.query:", req.query);
   const uid = req.query.id;
   const urole = req.query.role;
-  const selectSQL = `CALL sp_getEmotionHist(${uid}, "${urole}")`;
+  const selectSQL =
+    "CALL sp_getEmotionHist(" +
+    mysql.escape(uid) +
+    ", " +
+    mysql.escape(urole) +
+    ", @ERR_MESSAGE, @ERR_IND)";
   const logMessage = `Executing SQL: ${selectSQL}`;
   console.log(logMessage);
 
@@ -32,7 +37,10 @@ exports.getEmotionHist = (req, res) => {
 exports.getEmotionHistByID = (req, res) => {
   console.log("Executing exports.getEmotionHistByID...");
   const { id } = req.params;
-  const selectSQL = `CALL sp_getEmotionHistByID(${id})`;
+  const selectSQL =
+    "CALL sp_getEmotionHistByID(" +
+    mysql.escape(id) +
+    ", @ERR_MESSAGE, @ERR_IND)";
 
   conn.query(selectSQL, (err, rows) => {
     if (err) {
@@ -186,7 +194,7 @@ exports.updateEmotionHistByID = async (req, res) => {
     mysql.escape(snapshot_details.inp_snapshotdate) +
     ", " +
     mysql.escape(snapshot_details.inp_user) +
-    ", @eh_affectedRows, @et_affectedRows_ins, @et_affectedRows_del, @tr_affectedRows_ins, @tr_affectedRows_del" +
+    ", @eh_affectedRows, @et_affectedRows_ins, @et_affectedRows_del, @tr_affectedRows_ins, @tr_affectedRows_del, @ERR_MESSAGE, @ERR_IND" +
     ")";
 
   const logMessage = `Executing SQL: ${updateSQL.replace(/\?/g, (match) =>
@@ -322,7 +330,7 @@ exports.getTriggers = (req, res) => {
   console.log("Executing exports.getTriggers...");
   const userid = req.params.id;
 
-  const selectSQL = `CALL sp_getTriggers(${userid})`;
+  const selectSQL = "CALL sp_getTriggers(" + mysql.escape(userid) + ")";
 
   conn.query(selectSQL, (err, rows) => {
     if (err) {

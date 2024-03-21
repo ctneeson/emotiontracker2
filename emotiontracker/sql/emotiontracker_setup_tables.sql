@@ -1,3 +1,23 @@
+### USERS ###
+#CALL sp_postLogin('user', 'user123');
+#CALL sp_getUsers(1, 'administrator');
+#CALL sp_postNewUser('jakeblues', 'Jake', 'Blues', 'jake@blues.com', 'chicago123', 2, @ins_rows);
+#CALL sp_updateUser(31, 'jakeblues', 'Jake', 'Blues', 'jake@blues.com', 'chicago123', 'user', @upd_affectedRows);
+#CALL sp_deleteUser('jakeblues', @u_delRows, @eh_delRows, @et_delRows, @tr_delRows);
+
+### TRIGGERS ###
+#CALL sp_getTriggers(87);
+
+### EMOTIONHISTORY ###
+#CALL sp_getEmotionHist(2, 'user');
+#CALL sp_getEmotionHistByID(1);
+#CALL sp_postNewEmotionHist(7, 7, 7, 7, 7, 7, 7, 'Notes - Seven', 'Work Stress,Seven', '2024-02-03 02:49', 'jakeblues', @eh_affectedRows, @tr_affectedRows);
+#CALL sp_updateEmotionHistByID(1, 6, 8, 6, 2, 5, 5, 2, 'Notes - Work situation', 'Work Stress,Argument,999', '2024-03-04T21:46', 'ctn', @eh_affectedRows, @et_affectedRows_ins, @et_affectedRows_del, @tr_affectedRows_ins, @tr_affectedRows_del)
+#CALL sp_deleteEmotionHistByID(10, 'user', @eh_delRows, @et_delRows, @tr_delRows);
+#CALL sp_updateEmotionHistByID(12, 5, 5, 5, 5, 5, 5, 5, '', 'Five,Six', '2024-03-18T19:58', 'jakeblues', @eh_affectedRows, @et_affectedRows_ins, @et_affectedRows_del, @tr_affectedRows_ins, @tr_affectedRows_del);
+#CALL sp_getUserPostLogin('admin', 'admin123');
+#CALL sp_getEmotionHist(5, 'administrator', @ERR_MESSAGE, @ERR_IND);
+#SELECT SHA2(CONCAT(user.name, user.password, 'some salt', user.id), 256)
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -69,7 +89,18 @@ set @var=if( (SELECT true
 prepare stmt from @var;
 execute stmt;
 deallocate prepare stmt;
-
+-- Drop fk_emotiontrackeruserauth_emotiontrackerusers_id if exists
+set @var=if( (SELECT true
+              FROM information_schema.TABLE_CONSTRAINTS
+			  WHERE CONSTRAINT_SCHEMA = DATABASE()
+			  AND TABLE_NAME          = 'emotiontracker_userauth'
+			  AND CONSTRAINT_NAME     = 'fk_emotiontrackeruserauth_emotiontrackerusers_id'
+			  AND CONSTRAINT_TYPE     = 'FOREIGN KEY') = true,
+			 'ALTER TABLE emotiontracker_userauth drop foreign key fk_emotiontrackeruserauth_emotiontrackerusers_id',
+			 'select 1');
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
 
 -- Table structure for table `emotionhistory`
 DROP TABLE IF EXISTS `emotionhistory`;
@@ -121,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `emotiontracker_users` (
   `firstname` varchar(100),
   `lastname` varchar(100),
   `email` varchar(250) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` VARCHAR(500) NOT NULL,
   `type_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`)
@@ -135,6 +166,13 @@ CREATE TABLE IF NOT EXISTS `emotiontracker_userstypes` (
   PRIMARY KEY (`type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Create table `emotiontracker_userauth`
+DROP TABLE IF EXISTS `emotiontracker_userauth`;
+CREATE TABLE IF NOT EXISTS `emotiontracker_userauth` (
+  `id` int(11) PRIMARY KEY NOT NULL,
+  `salt` varchar(100)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Constraints for table `emotiontracker_users`
 ALTER TABLE `emotiontracker_users` ADD UNIQUE(`name`);
 ALTER TABLE `emotiontracker_users` ADD UNIQUE(`email`);
@@ -143,9 +181,13 @@ ALTER TABLE `emotiontracker_users` ADD CONSTRAINT minlength_email CHECK (CHAR_LE
 ALTER TABLE `emotiontracker_users` ADD CONSTRAINT minlength_password CHECK (CHAR_LENGTH(password) >= 6);
 ALTER TABLE `emotiontracker_users` ADD CONSTRAINT `emotiontracker_users_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `emotiontracker_userstypes` (`type_id`);
 
+-- Constraints for table `emotiontracker_userauth`
+ALTER TABLE `emotiontracker_userauth` ADD CONSTRAINT `fk_emotiontrackeruserauth_emotiontrackerusers_id` FOREIGN KEY (`id`) REFERENCES `emotiontracker_users` (`id`);
+
 -- Truncate tables before repopulating
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE `emotiontracker_users`;
+TRUNCATE TABLE `emotiontracker_userauth`;
 TRUNCATE TABLE `emotiontracker_userstypes`;
 TRUNCATE TABLE `triggers`;
 TRUNCATE TABLE `emotionhistory`;
@@ -161,6 +203,26 @@ INSERT INTO `emotiontracker_userstypes` (`role`) VALUES
 INSERT INTO `emotiontracker_users` (`name`, `firstname`, `lastname`, `email`, `password`, `type_id`) VALUES
 ('admin', 'Admini', 'Strator', 'admin@admin.com', 'admin123', 1),
 ('user', 'User', 'McUser', 'user@qub.ac.uk', 'user123', 2);
+
+-- Populate table `emotiontracker_userauth`
+INSERT INTO `emotiontracker_userauth`
+SELECT id, LEFT(UUID(),8) FROM emotiontracker_users;
+
+-- Update `emotiontracker_users` with encrypted passwords
+DROP TEMPORARY TABLE IF EXISTS temp_userauth;
+
+CREATE TEMPORARY TABLE temp_userauth
+SELECT u.id, SHA2(CONCAT(u.name, u.password, ua.salt),256) AS pass
+FROM emotiontracker_users u
+JOIN emotiontracker_userauth ua
+ON u.id = ua.id;
+
+UPDATE emotiontracker_users u
+INNER JOIN temp_userauth tua
+ON u.id = tua.id
+SET u.password = tua.pass;
+
+DROP TEMPORARY TABLE IF EXISTS temp_userauth;
 
 -- Constraints for table `emotion_triggers`
 ALTER TABLE `emotion_triggers` ADD CONSTRAINT `fk_emotiontriggers_emotionhistory_id` FOREIGN KEY (`emotionhistory_id`) REFERENCES emotionhistory(`id`) ON DELETE CASCADE;

@@ -32,7 +32,7 @@ exports.postLogin = (req, res) => {
     mysql.escape(username) +
     ", " +
     mysql.escape(userpass) +
-    ")";
+    ", @ERR_MESSAGE, @ERR_IND)";
 
   console.log("Executing SQL:", checkuserSQL);
   conn.query(checkuserSQL, vals, (err, rows) => {
@@ -80,7 +80,11 @@ exports.getUsers = (req, res) => {
   }
 
   const selectSQL =
-    "CALL sp_getUsers(" + mysql.escape(uid) + ", " + mysql.escape(urole) + ")";
+    "CALL sp_getUsers(" +
+    mysql.escape(uid) +
+    ", " +
+    mysql.escape(urole) +
+    ", @ERR_MESSAGE, @ERR_IND)";
 
   const logMessage = `Executing SQL: ${selectSQL}`;
   console.log(logMessage);
@@ -163,6 +167,7 @@ exports.postNewUser = async (req, res) => {
     inp_password: req.body["user_details[inp_password]"],
     inp_typeid: req.body["user_details[inp_typeid]"],
   };
+  console.log("req.body:", req.body);
   console.log("user_details:", user_details);
 
   if (!user_details) {
@@ -188,7 +193,7 @@ exports.postNewUser = async (req, res) => {
     mysql.escape(user_details.inp_password) +
     ", " +
     mysql.escape(user_details.inp_typeid) +
-    ", @ins_rows" +
+    ", @ins_rows, @ERR_MESSAGE, @ERR_IND" +
     ")";
 
   const logMessage = `Executing SQL: ${insertSQL.replace(/\?/g, (match) =>
@@ -321,7 +326,7 @@ exports.deleteUser = (req, res) => {
   const deleteuserSQL =
     "CALL sp_deleteUser(" +
     mysql.escape(username) +
-    ", @u_delRows, @eh_delRows, @et_delRows, @tr_delRows" +
+    ", @u_delRows, @ua_delRows, @eh_delRows, @et_delRows, @tr_delRows, @ERR_MESSAGE, @ERR_IND" +
     ")";
 
   const logMessage = `Executing SQL: ${deleteuserSQL.replace(/\?/g, (match) =>
@@ -338,10 +343,12 @@ exports.deleteUser = (req, res) => {
       });
     } else {
       var u_delRows = rows[0][0].u_delRows;
+      var ua_delRows = rows[0][0].ua_delRows;
       var eh_delRows = rows[0][0].eh_delRows;
       var et_delRows = rows[0][0].et_delRows;
       var tr_delRows = rows[0][0].tr_delRows;
       console.log("Rows deleted from emotiontracker_users:", u_delRows);
+      console.log("Rows deleted from emotiontracker_userauth:", ua_delRows);
       console.log("Rows deleted from emotionhistory:", eh_delRows);
       console.log("Rows deleted from emotion_triggers:", et_delRows);
       console.log("Rows deleted from triggers:", tr_delRows);

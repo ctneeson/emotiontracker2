@@ -23,6 +23,15 @@
   </head>
 
   <body>
+    <% if (userName) { %>
+    <div class="uk-flex uk-flex-center uk-flex-column">
+      <div class="uk-container uk-container-xsmall">
+        <span class="uk-badge uk-margin-top">
+          User logged in: <%= userName %></span
+        >
+      </div>
+    </div>
+    <% } %>
     <div class="uk-section">
       <div class="uk-container">
         <!-- prettier-ignore -->
