@@ -60,24 +60,6 @@ BEGIN
  WHERE u.name = inp_name;
  
  DROP TEMPORARY TABLE IF EXISTS temp_userenc;
- -- DROP TEMPORARY TABLE IF EXISTS temp_userauth;
-
- -- CREATE TEMPORARY TABLE temp_userauth
- -- SELECT u.id,
- --  AES_ENCRYPT(CONCAT(u.name, u.password, ua.salt),ua.aes_key) AS pass
- -- SHA2(CONCAT(u.name, u.password, ua.salt),256) AS pass
- -- FROM emotiontracker_users u
- -- JOIN emotiontracker_userauth ua
- -- ON u.id = ua.id
- -- AND u.name = inp_name;
- 
- -- UPDATE emotiontracker_users u
- -- INNER JOIN temp_userauth tua
- -- ON u.id = tua.id
- -- AND u.name = inp_name
- -- SET u.password = tua.pass;
- 
- -- DROP TEMPORARY TABLE IF EXISTS temp_userauth;
 
  COMMIT;
  

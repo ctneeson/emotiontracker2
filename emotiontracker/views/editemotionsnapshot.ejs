@@ -10,7 +10,10 @@
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- sessionUserName -->
-    <script src="./scripts/sessionUserName.js"></script>
+    <script>
+      var sessionUserName = "<%= userName %>";
+      console.log("sessionUserName:", sessionUserName);
+    </script>
     <!-- Semantic UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <style>

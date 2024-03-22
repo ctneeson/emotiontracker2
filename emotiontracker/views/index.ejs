@@ -16,7 +16,10 @@
     <!-- Chart JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <!-- sessionUserName -->
-    <script src="./scripts/sessionUserName.js"></script>
+    <script>
+      var sessionUserName = "<%= userName %>";
+      console.log("sessionUserName:", sessionUserName);
+    </script>
   </head>
 
   <body>
