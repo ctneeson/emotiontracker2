@@ -15,9 +15,43 @@ CREATE PROCEDURE IF NOT EXISTS sp_postNewEmotionHist(
    IN inp_snapshotdate DATETIME,
    IN inp_user VARCHAR(100),
    OUT eh_affectedRows INT,
-   OUT tr_affectedRows INT
+   OUT tr_affectedRows INT,
+   OUT ERR_MESSAGE VARCHAR(500),
+   OUT ERR_IND BIT
 )
 BEGIN
+
+ DECLARE exit_handler CONDITION FOR SQLSTATE '45000';
+ SET ERR_IND = 0;
+ IF (inp_anger IS NULL
+     OR inp_contempt IS NULL
+     OR inp_disgust IS NULL
+     OR inp_enjoyment IS NULL
+     OR inp_fear IS NULL
+     OR inp_sadness IS NULL
+     OR inp_surprise IS NULL
+     OR inp_snapshotdate IS NULL
+     OR inp_user IS NULL
+	) THEN
+     SET ERR_MESSAGE = 'Invalid input provided: emotion levels, snapshot date and user must not be null.', ERR_IND = 1;
+ ELSEIF (inp_user NOT IN (SELECT name FROM emotiontracker_users)) THEN
+     SET ERR_MESSAGE = 'Invalid user name provided.', ERR_IND = 1;
+ ELSEIF (inp_snapshotdate > NOW()) THEN
+     SET ERR_MESSAGE = 'Invalid snapshot date: cannot be in the future', ERR_IND = 1;
+ ELSEIF (inp_anger        < 0 OR inp_anger     > 10
+         OR inp_contempt  < 0 OR inp_contempt  > 10
+         OR inp_disgust   < 0 OR inp_disgust   > 10
+         OR inp_enjoyment < 0 OR inp_enjoyment > 10
+         OR inp_fear      < 0 OR inp_fear      > 10
+         OR inp_sadness   < 0 OR inp_sadness   > 10
+         OR inp_surprise  < 0 OR inp_surprise  > 10
+		 ) THEN
+     SET ERR_MESSAGE = 'Invalid snapshot value(s).', ERR_IND = 1;
+ END IF;
+ 
+ IF ERR_IND = 1 THEN
+    SIGNAL exit_handler SET MESSAGE_TEXT = ERR_MESSAGE;
+ END IF;
 
  START TRANSACTION;
  

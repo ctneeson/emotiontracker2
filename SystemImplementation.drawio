@@ -1,0 +1,128 @@
+<mxfile host="Electron" modified="2024-03-21T23:33:15.701Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.0.4 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="4TGwV0IyfqYoKFa6lMxG" version="24.0.4" type="device">
+  <diagram id="0d7cefc2-ccd6-e077-73ed-a8e48b0cddf6" name="Page-1">
+    <mxGraphModel dx="989" dy="577" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-123" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-107" target="qfHawp3DzQ6oZ4T0XKAL-109">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="319.9999999999999" as="sourcePoint" />
+            <mxPoint x="280" y="319.9999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-124" value="Request" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-123">
+          <mxGeometry x="0.2533" y="2" relative="1" as="geometry">
+            <mxPoint x="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-107" value="Web browser" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/users/browser.svg;" vertex="1" parent="1">
+          <mxGeometry x="110" y="310" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-130" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-108" target="qfHawp3DzQ6oZ4T0XKAL-110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-131" value="Request" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-130">
+          <mxGeometry x="0.2527" y="-1" relative="1" as="geometry">
+            <mxPoint x="-23" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-157" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-108" target="qfHawp3DzQ6oZ4T0XKAL-109">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-158" value="Response&lt;div&gt;sent&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-157">
+          <mxGeometry x="-0.2736" y="1" relative="1" as="geometry">
+            <mxPoint x="-23" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-108" value="API" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/applications/api_developer_portal.svg;" vertex="1" parent="1">
+          <mxGeometry x="505" y="310" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-145" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;exitX=0;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-109" target="qfHawp3DzQ6oZ4T0XKAL-136">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-146" value="Response" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-145">
+          <mxGeometry x="0.21" y="1" relative="1" as="geometry">
+            <mxPoint y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-109" value="Server&lt;div&gt;(localhost:3000)&lt;/div&gt;" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/applications/app_server.svg;" vertex="1" parent="1">
+          <mxGeometry x="290" y="310" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-132" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-110" target="qfHawp3DzQ6oZ4T0XKAL-108">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-133" value="Response" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-132">
+          <mxGeometry x="-0.2927" y="2" relative="1" as="geometry">
+            <mxPoint x="-26" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-164" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-110" target="qfHawp3DzQ6oZ4T0XKAL-163">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-166" value="MySQL&lt;div&gt;Stored Procedures&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-164">
+          <mxGeometry x="0.0207" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-110" value="Server&lt;div&gt;(localhost:3002)&lt;/div&gt;" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/applications/app_server.svg;" vertex="1" parent="1">
+          <mxGeometry x="700" y="310" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-155" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-109" target="qfHawp3DzQ6oZ4T0XKAL-108">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="380" y="332" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-156" value="Request&lt;div&gt;received&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-155">
+          <mxGeometry x="0.5091" y="1" relative="1" as="geometry">
+            <mxPoint x="-42" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-134" value="&lt;div&gt;&lt;b&gt;&lt;u&gt;&lt;font face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;VS Code&lt;/font&gt;&lt;/u&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;JavaScript&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;- app.js&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;font-size: 8px; color: rgb(51, 51, 255);&quot;&gt;- emotionroutes.js&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;- userroutes.js&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 8px; color: rgb(51, 51, 255);&quot;&gt;- emotioncontrollers.js&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;- usercontrollers.js&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;Requests routed to API on localhost:3002&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;Responses received on localhost:3000&lt;/font&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;labelBackgroundColor=default;shadow=0;dashed=0;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="370" y="90" width="120" height="205" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-140" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-136" target="qfHawp3DzQ6oZ4T0XKAL-107">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-154" value="Render/Redirect" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-140">
+          <mxGeometry x="-0.0441" y="-2" relative="1" as="geometry">
+            <mxPoint y="17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-136" value="&lt;div&gt;&lt;b&gt;&lt;u&gt;&lt;font face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;VS Code&lt;/font&gt;&lt;/u&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;Rendered in&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;font color=&quot;#3333ff&quot;&gt;&lt;div&gt;login.ejs&lt;/div&gt;&lt;div&gt;createaccount.ejs&lt;/div&gt;&lt;div&gt;index.ejs&lt;/div&gt;&lt;div&gt;addemotionsnapshot.ejs&lt;/div&gt;&lt;div&gt;editdemotionsnapshot.ejs&lt;br&gt;&lt;/div&gt;&lt;div&gt;accountadmin.ejs&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;(HTML, CSS, JavaScript)&lt;/div&gt;&lt;/font&gt;&lt;/span&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;labelBackgroundColor=default;shadow=0;dashed=0;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="90" y="440" width="110" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-148" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-147" target="qfHawp3DzQ6oZ4T0XKAL-107">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-153" value="Navigation &amp;amp; Commands" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-148">
+          <mxGeometry x="0.2583" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-147" value="User" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/users/user.svg;" vertex="1" parent="1">
+          <mxGeometry x="120" y="180" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-161" value="&lt;div&gt;&lt;b&gt;&lt;u&gt;&lt;font style=&quot;font-size: 8px;&quot; face=&quot;Helvetica&quot;&gt;VS Code&lt;/font&gt;&lt;/u&gt;&lt;/b&gt;&lt;b&gt;&lt;u&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/u&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;JavaScript&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;- app.js&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;font-size: 8px; color: rgb(51, 51, 255);&quot;&gt;- emotionroutes.js&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;- userroutes.js&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 8px; color: rgb(51, 51, 255);&quot;&gt;- emotioncontroller.js&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;- usercontroller.js&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;Database requests submitted&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#3333ff&quot; face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;Responses received &amp;amp; routed&lt;/font&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;labelBackgroundColor=default;shadow=0;dashed=0;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="680" y="120" width="120" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-165" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="qfHawp3DzQ6oZ4T0XKAL-163" target="qfHawp3DzQ6oZ4T0XKAL-110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-167" value="Data&lt;div&gt;Error Indicator&lt;/div&gt;&lt;div&gt;Error Message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="qfHawp3DzQ6oZ4T0XKAL-165">
+          <mxGeometry x="-0.1557" relative="1" as="geometry">
+            <mxPoint x="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-163" value="Database" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/data/data_services.svg;" vertex="1" parent="1">
+          <mxGeometry x="920" y="310" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-171" value="&lt;div&gt;&lt;b&gt;&lt;u&gt;&lt;font face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;Laragon&lt;/font&gt;&lt;/u&gt;&lt;/b&gt;&lt;/div&gt;&lt;font color=&quot;#3333ff&quot;&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;div&gt;&lt;font style=&quot;font-size: 12px;&quot; color=&quot;#3333ff&quot;&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;-&amp;nbsp;&lt;/span&gt;&lt;/font&gt;HeidiSQL&lt;br&gt;&lt;/div&gt;&lt;/span&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;labelBackgroundColor=default;shadow=0;dashed=0;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="890" y="230" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="qfHawp3DzQ6oZ4T0XKAL-172" value="&lt;div&gt;&lt;b&gt;&lt;u&gt;&lt;font face=&quot;Helvetica&quot; style=&quot;font-size: 8px;&quot;&gt;Laragon&lt;/font&gt;&lt;/u&gt;&lt;/b&gt;&lt;/div&gt;&lt;font color=&quot;#3333ff&quot;&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;div&gt;&lt;font style=&quot;font-size: 12px;&quot; color=&quot;#3333ff&quot;&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;-&amp;nbsp;&lt;/span&gt;&lt;/font&gt;Web server (localhost)&lt;br&gt;&lt;/div&gt;&lt;/span&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;labelBackgroundColor=default;shadow=0;dashed=0;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="90" y="120" width="120" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

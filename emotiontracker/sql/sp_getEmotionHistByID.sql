@@ -3,9 +3,23 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_getEmotionHistByID;
 
 CREATE PROCEDURE IF NOT EXISTS sp_getEmotionHistByID(
-   IN inp_id INT
+   IN inp_id INT,
+   OUT ERR_MESSAGE VARCHAR(500),
+   OUT ERR_IND BIT
 )
 BEGIN
+
+ DECLARE exit_handler CONDITION FOR SQLSTATE '45000';
+ SET ERR_IND = 0;
+ IF (inp_id IS NULL) THEN
+     SET ERR_MESSAGE = 'Invalid input(s). Snapshot ID must not be null.', ERR_IND = 1;
+ ELSEIF (SELECT COUNT(id) FROM emotionhistory WHERE id = inp_id) = 0 THEN
+     SET ERR_MESSAGE = 'Invalid snapshot ID.', ERR_IND = 1;
+ END IF;
+ 
+ IF ERR_IND = 1 THEN
+    SIGNAL exit_handler SET MESSAGE_TEXT = ERR_MESSAGE;
+ END IF;
 
  SELECT
   eh.id,
@@ -16,8 +30,8 @@ BEGIN
   eh.level_fear,
   eh.level_sadness,
   eh.level_surprise,
-  GROUP_CONCAT(t.id ORDER BY t.id ASC SEPARATOR ", ") AS triggerIDs,
-  GROUP_CONCAT(t.description ORDER BY t.id ASC SEPARATOR ", ") AS triggers,
+  GROUP_CONCAT(t.id ORDER BY t.id ASC SEPARATOR ",") AS triggerIDs,
+  GROUP_CONCAT(t.description ORDER BY t.id ASC SEPARATOR ",") AS triggers,
   t2.all_triggers,
   eh.notes,
   eh.ACTIVE,
@@ -47,9 +61,3 @@ BEGIN
 END$$
 
 DELIMITER ;
-
-
-
-/*
-CALL sp_getEmotionHistByID(1);
-*/

@@ -14,6 +14,11 @@ app.use(morgan("tiny"));
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));
 
+app.use(function (req, res, next) {
+  res.set("Cache-Control", "no-store");
+  next();
+});
+
 app.use(
   session({
     secret: "mysecretstring1234",

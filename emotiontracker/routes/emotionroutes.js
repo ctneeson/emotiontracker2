@@ -1,24 +1,19 @@
 const express = require("express");
 const controller = require("./../controllers/emotioncontrollers");
 const router = express.Router();
+const { isAuth } = require("./../middleware/auth");
 
 /////////////////////////////////////
 // EMOTIONHISTORY CALLS
 /////////////////////////////////////
-router.get("/new", async (req, res) => {
+router.get("/new", isAuth, async (req, res) => {
   await controller.getTriggers(req, res);
 });
-router.get("/", controller.getEmotionHist); // Get full history
-router.get("/edit/:id", controller.getEmotionHistByID); // Get individual snapshot
-router.post("/new", controller.postNewEmotionHist); // Post new snapshot
-router.post("/edit/:id", controller.updateEmotionHistByID); // Update existing snapshot
-router.post("/del/:id", controller.deleteEmotionHist); // Delete existing snapshot
-
-/////////////////////////////////////
-// TRIGGER CALLS
-/////////////////////////////////////
-router.post("/triggers/new", controller.postNewTrigger); // Post new trigger
-router.post("/triggers/del/:id", controller.deleteTrigger); // Delete trigger
+router.get("/", isAuth, controller.getEmotionHist); // Get full history
+router.get("/edit/:id", isAuth, controller.getEmotionHistByID); // Get individual snapshot
+router.post("/new", isAuth, controller.postNewEmotionHist); // Post new snapshot
+router.post("/edit/:id", isAuth, controller.updateEmotionHistByID); // Update existing snapshot
+router.post("/del/:id", isAuth, controller.deleteEmotionHist); // Delete existing snapshot
 
 /////////////////////////////////////
 // LOGIN CALLS

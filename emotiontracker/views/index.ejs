@@ -15,9 +15,23 @@
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
     <!-- Chart JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <!-- sessionUserName -->
+    <script>
+      var sessionUserName = "<%= userName %>";
+      console.log("sessionUserName:", sessionUserName);
+    </script>
   </head>
 
   <body>
+    <% if (userName) { %>
+    <div class="uk-flex uk-flex-center uk-flex-column">
+      <div class="uk-container uk-container-xsmall">
+        <span class="uk-badge uk-margin-top">
+          User logged in: <%= userName %></span
+        >
+      </div>
+    </div>
+    <% } %>
     <div class="uk-section">
       <div class="uk-container">
         <!-- prettier-ignore -->
@@ -113,14 +127,16 @@
     <!-- Update usernameDisplay -->
     <!-- prettier-ignore --------->
     <script>
-      var updatedByDropdown = document.getElementById("updatedByDropdown");
-      var usernameDisplay = document.getElementById("usernameDisplay");
+        <% if (role == 'administrator') { %>
+        var updatedByDropdown = document.getElementById("updatedByDropdown");
+        var usernameDisplay = document.getElementById("usernameDisplay");
 
-      usernameDisplay.textContent = `Emotion Snapshots for: ${updatedByDropdown.value}`;
+        usernameDisplay.textContent = `Emotion Snapshots for: ${updatedByDropdown.value}`;
 
-      updatedByDropdown.addEventListener("change", function () {
-        usernameDisplay.textContent = `Emotion Snapshots for: ${this.value}`;
-      });
+        updatedByDropdown.addEventListener("change", function () {
+          usernameDisplay.textContent = `Emotion Snapshots for: ${this.value}`;
+        });
+      <% } %>
     </script>
     <!-- prettier-ignore -->
     <script>
@@ -198,15 +214,11 @@
     <!-- prettier-ignore -->
     <script>
       function navigateToAddPage() {
-        <% if (typeof user !== 'undefined' && user && user.name) { %>
-          // Set the user.name in localStorage
-          localStorage.setItem("username", "<%= user.name %>");
-
-          // Navigate to the "/new" page
+        if (sessionUserName) {
           window.location.href = "/new";
-        <% } else { %>
+        } else {
           console.log("User is undefined or does not have a name."); // or handle it as needed
-        <% } %>
+        }
       }
     </script>
     <!-- prettier-ignore -->

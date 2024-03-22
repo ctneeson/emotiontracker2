@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- sessionUserName -->
+    <script>
+      var sessionUserName = "<%= userName %>";
+      console.log("sessionUserName:", sessionUserName);
+    </script>
     <!-- Semantic UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <style>
@@ -24,21 +29,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
     <!-- Chart JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-
     <!-- EventListener script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
 
-        // 1. GET USER NAME
-        const username = localStorage.getItem("username");
-        if (username) {
-          console.log("Username:", username);
-          window.username = username;
-        } else {
-          console.error("Username not found in localStorage");
-        }
-
-        // 2. PREPARE TRIGGER VALUES FOR DROPDOWN MENU
+        // PREPARE TRIGGER VALUES FOR DROPDOWN MENU
         const triggerValues = '<%= triggerValues %>'.split(',');
         function populateDropdown() {
           const dropdown = document.getElementById("trigger-details");
@@ -73,6 +68,13 @@
   </head>
 
   <body>
+    <% if (userName) { %>
+    <div class="uk-flex uk-flex-center uk-flex-column">
+      <div class="uk-container uk-container-xsmall">
+        <span class="uk-badge uk-margin-top"> User logged in: <%= userName %></span>
+      </div>
+    </div>
+    <% } %>
     <div class="uk-section">
       <div class="uk-container">
         <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar="" style="width:100%">
@@ -377,13 +379,13 @@
       // Function to perform the API call after confirmation
       function performAdd() {
         // Ensure that the username is defined
-        if (!window.username) {
+        if (!sessionUserName) {
           console.error("Username is not defined.");
           return;
         }
         console.log("Adding new snapshot...");
 
-        var snapshotuser = window.username;
+        var snapshotuser = sessionUserName;
         var anger = document.getElementById('anger').value;
         var contempt = document.getElementById('contempt').value;
         var disgust = document.getElementById('disgust').value;
