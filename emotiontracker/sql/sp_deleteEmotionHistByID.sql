@@ -7,9 +7,25 @@ CREATE PROCEDURE IF NOT EXISTS sp_deleteEmotionHistByID(
    IN inp_user VARCHAR(100),
    OUT eh_delRows INT,
    OUT et_delRows INT,
-   OUT tr_delRows INT
+   OUT tr_delRows INT,
+   OUT ERR_MESSAGE VARCHAR(500),
+   OUT ERR_IND BIT
 )
 BEGIN
+
+ DECLARE exit_handler CONDITION FOR SQLSTATE '45000';
+ SET ERR_IND = 0;
+ IF (inp_ehid IS NULL OR inp_user IS NULL) THEN
+     SET ERR_MESSAGE = 'Invalid input provided: snapshot ID and user must not be null.', ERR_IND = 1;
+ ELSEIF (SELECT COUNT(id) FROM emotionhistory WHERE id = inp_ehid) = 0 THEN
+     SET ERR_MESSAGE = 'Invalid snapshot ID provided', ERR_IND = 1;
+ ELSEIF (inp_user NOT IN (SELECT name FROM emotiontracker_users)) THEN
+     SET ERR_MESSAGE = 'Invalid user name provided.', ERR_IND = 1;
+ END IF;
+ 
+ IF ERR_IND = 1 THEN
+    SIGNAL exit_handler SET MESSAGE_TEXT = ERR_MESSAGE;
+ END IF;
 
  START TRANSACTION;
  

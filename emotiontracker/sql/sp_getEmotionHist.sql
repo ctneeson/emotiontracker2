@@ -2,11 +2,25 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS sp_getEmotionHist;
 
-CREATE PROCEDURE IF NOT EXISTS sp_getEmotionHist(
-	IN inp_userid INT,
-	IN inp_role VARCHAR(100)
+CREATE PROCEDURE sp_getEmotionHist(
+    IN inp_userid INT,
+    IN inp_role VARCHAR(100),
+    OUT ERR_MESSAGE VARCHAR(500),
+    OUT ERR_IND BIT
 )
 BEGIN
+
+ DECLARE exit_handler CONDITION FOR SQLSTATE '45000';
+ SET ERR_IND = 0;
+ IF (SELECT COUNT(id) FROM emotiontracker_users WHERE id = inp_userid) = 0 THEN
+     SET ERR_MESSAGE = 'Invalid user ID provided', ERR_IND = 1;
+ ELSEIF (SELECT COUNT(role) FROM emotiontracker_userstypes WHERE role = inp_role) = 0 THEN
+     SET ERR_MESSAGE = 'Invalid role provided', ERR_IND = 1;
+ END IF;
+ 
+ IF ERR_IND = 1 THEN
+    SIGNAL exit_handler SET MESSAGE_TEXT = ERR_MESSAGE;
+ END IF;
 
  SELECT
   eh.id,

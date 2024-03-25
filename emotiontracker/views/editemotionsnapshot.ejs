@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- sessionUserName -->
+    <script>
+      var sessionUserName = "<%= userName %>";
+      console.log("sessionUserName:", sessionUserName);
+    </script>
     <!-- Semantic UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <style>
@@ -28,9 +33,9 @@
     <script>
       $(document).ready(function () {
         function initializeDropdown(initialTriggers, allTriggers) {
-          var initialValues = initialTriggers.split(",").map(function (trigger) {
+          var initialValues = initialTriggers ? initialTriggers.split(",").map(function (trigger) {
             return trigger.trim();
-          });
+          }) : [];
 
           var allValues = allTriggers.split(",").map(function (trigger) {
             return trigger.trim();
@@ -64,6 +69,15 @@
   </head>
 
   <body>
+    <% if (userName) { %>
+    <div class="uk-flex uk-flex-center uk-flex-column">
+      <div class="uk-container uk-container-xsmall">
+        <span class="uk-badge uk-margin-top">
+          User logged in: <%= userName %></span
+        >
+      </div>
+    </div>
+    <% } %>
     <div class="uk-section">
       <div class="uk-container">
         <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar="" style="width:100%">
@@ -230,9 +244,7 @@
       </div>
     </div>
     
-    <!------------------->
-    <!-- Range Sliders -->
-    <!------------------->
+    <!-- Data Inputs -->
     <script>
       function increaseValue(emotion) {
         var slider = document.getElementById(emotion);
@@ -410,8 +422,8 @@
         "<%= details[0].level_sadness %>" + '|' +
         "<%= details[0].level_surprise %>" + '|' +
         "<%= inputdate %>" + '|' +
-        "<%= details[0].notes.trim() %>" + '|' +
-        "<%= details[0].triggers.replace(', ', ',') %>";
+        "<%= (details[0].notes || '').trim() %>" + '|';
+        "<%= (details[0].triggers || '').replace(', ', ',') %>";
 
         function getCurrentValues() {
           var currentInputValues =

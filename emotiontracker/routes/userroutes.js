@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require("./../controllers/usercontrollers");
 const userRouter = express.Router();
+const { isAuth } = require("./../middleware/auth");
 
 /////////////////////////////////////
 // USER CALLS:                     //
@@ -12,11 +13,11 @@ const userRouter = express.Router();
 userRouter.get("/createaccount", (req, res) => {
   res.render("createaccount");
 });
-userRouter.get("/accountadmin", async (req, res) => {
-  await userController.getUsers(req, res);
+userRouter.get("/accountadmin", isAuth, async (req, res) => {
+  await userController.getUsers(req, res, { userName: req.session.userName });
 });
 userRouter.post("/users/new", userController.postNewUser);
-userRouter.put("/users/:id", userController.putUserDetails);
-userRouter.post("/users/:name", userController.deleteUser);
+userRouter.put("/users/:id", isAuth, userController.putUserDetails);
+userRouter.post("/users/:name", isAuth, userController.deleteUser);
 
 module.exports = userRouter;
