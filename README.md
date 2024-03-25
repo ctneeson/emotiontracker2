@@ -92,7 +92,7 @@ npm install nodemon axios cors dotenv ejs express express-session method-overrid
 ```
 3. Then start the project by running this command:
 ```console
-npm init -y
+npm start
 ```
 ##### Within the other window, open the server-side folder (emotiontrackerapi)
 1. Open a new Terminal and initialise the Node project by running the following command:
@@ -105,7 +105,7 @@ npm install nodemon cors dotenv express method-override morgan mysql2
 ```
 3. Then start the project by running this command:
 ```console
-npm init -y
+npm start
 ```
 
 ### Open the Web App
