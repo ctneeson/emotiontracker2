@@ -37,14 +37,14 @@ It may be possible to achieve the same result using alternative dev environment 
 - The creation of MySQL Stored Procedures via XAMPP is more complicated. Many of the Stored Procedures used in this project could not be set up as required via the PHPMyAdmin interface that comes with XAMPP. They have instead been created through executing the relevant SQL scripts in Laragon's HeidiSQL interface, which offers greater control with respect to delimiters and multi-statement queries.
 
 ### Download and install Laragon
+https://laragon.org/download/
 
 ### Download the emotiontracker project folders
 https://github.com/ctneeson/emotiontracker2
 Click on 'Code' > 'Download ZIP', and extract the downloaded files to a suitable location (suggestion: inside of C:/laragon/www)
 
 ### Start Laragon
-![alt text](http://url/to/img.png)
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![alt text](https://github.com/ctneeson/emotiontracker2/blob/main/Start%20Laragon.jpg?raw=true)
 
 ### Open HeidiSQL
 ![alt text](http://url/to/img.png)
