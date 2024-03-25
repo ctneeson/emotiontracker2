@@ -85,22 +85,28 @@ Open 2 windows in VS Code:
 1. Open a new Terminal and initialise the Node project by running the following command:
 ```console
 npm init -y
+```
 2. Run the following command in the terminal to install dependencies:
 ```console
 npm install nodemon axios cors dotenv ejs express express-session method-override morgan mysql2
+```
 3. Then start the project by running this command:
 ```console
 npm init -y
+```
 ##### Within the other window, open the server-side folder (emotiontrackerapi)
 1. Open a new Terminal and initialise the Node project by running the following command:
 ```console
 npm init -y
+```
 2. Run the following command in the terminal to install dependencies:
 ```console
 npm install nodemon cors dotenv express method-override morgan mysql2
+```
 3. Then start the project by running this command:
 ```console
 npm init -y
+```
 
 ### Open the Web App
 Navigate to http://localhost:3000 on your machine in order to use the web app.
