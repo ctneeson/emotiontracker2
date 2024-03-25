@@ -47,8 +47,7 @@ Click on 'Code' > 'Download ZIP', and extract the downloaded files to a suitable
 ![alt text](https://github.com/ctneeson/emotiontracker2/blob/main/Start%20Laragon.jpg?raw=true)
 
 ### Open HeidiSQL
-![alt text](http://url/to/img.png)
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![alt text](https://github.com/ctneeson/emotiontracker2/blob/main/HeidiSQL.gif)
 
 ### Create Database
 ![alt text](http://url/to/img.png)
