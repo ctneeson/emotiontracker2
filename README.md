@@ -50,25 +50,57 @@ Click on 'Code' > 'Download ZIP', and extract the downloaded files to a suitable
 ![alt text](https://github.com/ctneeson/emotiontracker2/blob/main/HeidiSQL.gif)
 
 ### Create Database
-![alt text](http://url/to/img.png)
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
-In HeidiSQL, create a new database called 'emotiontracker'.
+![alt text](https://github.com/ctneeson/emotiontracker2/blob/main/CreateDatabase.gif)
+In HeidiSQL, create a new database for the project.
 
 ### Create & populate SQL tables
-After creating the 'emotiontracker' database, run the following SQL script to create and populate tables.
+After creating the database, run the following SQL script to create and populate the Database tables.
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/emotiontracker_setup_tables.sql
+
 #### Database diagram
 The following diagram represents the database structure and shows the relationship between database tables.
-![alt text](http://url/to/img.png)
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![alt text](https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker_ERD.png)
 
 ### Create Stored Procedures
-Run the following scripts to create the necessary SQL stored procedures.
+Run the following scripts against your new database to create the necessary SQL stored procedures.
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_deleteEmotionHistByID.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_deleteUser.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_getEmotionHist.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_getEmotionHistByID.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_getTriggers.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_getUserPostLogin.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_getUsers.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_postNewEmotionHist.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_postNewUser.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_updateEmotionHistByID.sql
+https://github.com/ctneeson/emotiontracker2/blob/main/emotiontracker/sql/sp_updateUser.sql
+
+### Remove 'node_modules' and 'package-lock.json'
+Delete the 'node_modules' folder and 'package-lock.json' files from both the 'emotiontracker' and 'emotiontrackerapi' folders within the zip file that you have downloaded.
+![alt text](https://github.com/ctneeson/emotiontracker2/blob/main/DeleteFolders.jpg)
 
 ### Open project folders in VS Code
-After the previous scripts have been run in HeidiSQL, you will need to open 2 windows in VS Code:
-- Within one window, open the client-side folder (emotiontracker) that is contained within the files that have been extracted from the downloaded ZIP - e.g. C:/laragon/www/emotiontracker2-main/emotiontracker)
-- Within the other window, open the server-side folder (emotiontrackerapi)
-In both windows, open a new Terminal and start the Node projects by running 'npm start'
+Open 2 windows in VS Code:
+##### Within one window, open the client-side folder (emotiontracker) that is contained within the files that have been extracted from the downloaded ZIP - e.g. C:/laragon/www/emotiontracker2-main/emotiontracker)
+1. Open a new Terminal and initialise the Node project by running the following command:
+```console
+npm init -y
+2. Run the following command in the terminal to install dependencies:
+```console
+npm install nodemon axios cors dotenv ejs express express-session method-override morgan mysql2
+3. Then start the project by running this command:
+```console
+npm init -y
+##### Within the other window, open the server-side folder (emotiontrackerapi)
+1. Open a new Terminal and initialise the Node project by running the following command:
+```console
+npm init -y
+2. Run the following command in the terminal to install dependencies:
+```console
+npm install nodemon cors dotenv express method-override morgan mysql2
+3. Then start the project by running this command:
+```console
+npm init -y
 
 ### Open the Web App
 Navigate to http://localhost:3000 on your machine in order to use the web app.
